@@ -2,9 +2,11 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import swaggerUi from 'swagger-ui-express';
+import verifyToken from './middlewares/verifyToken.js';
 import swaggerSpec from './config/swagger.js';
 import authRoutes from './routes/authRoutes.js';
 import roleRoutes from './routes/roleRoutes.js';
+import permissionRoutes from './routes/permissionRoutes.js'
 
 dotenv.config();
 const app = express();
@@ -18,6 +20,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api/auth', authRoutes);
 
 app.use('/api/roles',roleRoutes);
+
+app.use('/api/permissions',verifyToken,permissionRoutes)
 
 // Root Route
 app.get('/', (req, res) => {
