@@ -1,6 +1,5 @@
 import express from 'express';
 import { assignPermissionsToRole, removePermissionsFromRole } from '../controllers/rolePermissionController.js';
-import verifyToken from '../middleware/verifyToken.js';
 
 const router = express.Router();
 
@@ -41,7 +40,7 @@ const router = express.Router();
  *       500:
  *         description: Internal server error
  */
-router.post('/assign', verifyToken, assignPermissionsToRole);
+router.post('/assign', assignPermissionsToRole);
 
 /**
  * @swagger
@@ -80,6 +79,6 @@ router.post('/assign', verifyToken, assignPermissionsToRole);
  *       500:
  *         description: Internal server error
  */
-router.post('/remove', verifyToken, removePermissionsFromRole);
+router.post('/remove', removePermissionsFromRole);
 
 export default router;

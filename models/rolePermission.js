@@ -1,29 +1,33 @@
-// models/rolePermission.js
-export default (sequelize, DataTypes) => {
-    const RolePermission = sequelize.define('RolePermission', {
+import { Model, DataTypes } from 'sequelize';
+
+class RolePermission extends Model {
+  static init(sequelize) {
+    return super.init({
       role_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'roles',
+          model: 'roles', // ✅ table name
           key: 'id',
         },
         onDelete: 'CASCADE',
       },
       permission_id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.JSON,
         allowNull: false,
         references: {
-          model: 'permissions',
+          model: 'permissions', // ✅ table name
           key: 'id',
         },
         onDelete: 'CASCADE',
       },
     }, {
+      sequelize,
+      modelName: 'RolePermission',
       tableName: 'role_permissions',
       timestamps: false,
     });
-  
-    return RolePermission;
-  };
-  
+  }
+}
+
+export default RolePermission;
