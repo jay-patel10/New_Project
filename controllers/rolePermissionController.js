@@ -12,15 +12,19 @@ export const assignPermissionsToRole = async (req, res) => {
     let rolePermission = await RolePermission.findOne({ where: { role_id } });
 
     if (!rolePermission) {
+      // No existing role permission, create a new record
       await RolePermission.create({
         role_id,
-        permission_id: JSON.stringify(permission_id), // ✅ Convert to JSON string
+        permission_id: permission_id, // Directly store permission_id as an array (no stringify)
       });
     } else {
-      const currentPermissions = JSON.parse(rolePermission.permission_id || '[]'); // ✅ Parse existing JSON
-      const updatedPermissions = [...new Set([...currentPermissions, ...permission_id])];
+      const currentPermissions = rolePermission.permission_id || []; // Directly access permission_id (already an array)
+      console.log('Current Permissions:', currentPermissions);
 
-      rolePermission.permission_id = JSON.stringify(updatedPermissions); // ✅ Convert to JSON string
+      const updatedPermissions = [...new Set([...currentPermissions, ...permission_id])]; // Merge and remove duplicates
+      console.log('Updated Permissions:', updatedPermissions);
+
+      rolePermission.permission_id = updatedPermissions; // Update with new permissions (as an array)
       await rolePermission.save();
     }
 
@@ -44,12 +48,14 @@ export const removePermissionsFromRole = async (req, res) => {
       return res.status(404).json({ message: 'Role permission entry not found' });
     }
 
-    const currentPermissions = JSON.parse(rolePermission.permission_id || '[]');
-    const updatedPermissions = currentPermissions.filter(
-      perm => !permission_id.includes(perm)
-    );
+    const currentPermissions = rolePermission.permission_id || [];
+    console.log('Current Permissions Before Removal:', currentPermissions);
 
-    rolePermission.permission_id = JSON.stringify(updatedPermissions); // ✅ Convert to JSON string
+    const updatedPermissions = currentPermissions.filter(perm => !permission_id.includes(perm));
+    console.log('Updated Permissions After Removal:', updatedPermissions);
+
+    // Save the updated permissions as an array
+    rolePermission.permission_id = updatedPermissions; // Directly update permission_id as an array
     await rolePermission.save();
 
     res.status(200).json({ message: 'Permissions removed from role successfully' });

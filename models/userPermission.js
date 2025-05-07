@@ -1,14 +1,14 @@
 import { Model, DataTypes } from 'sequelize';
 
-class RolePermission extends Model {
+class UserPermission extends Model {
   static init(sequelize) {
     return super.init({
-      role_id: {
+      user_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true,
         references: {
-          model: 'roles', // ✅ table name
+          model: 'users', // ✅ users table
           key: 'id',
         },
         onDelete: 'CASCADE',
@@ -17,14 +17,15 @@ class RolePermission extends Model {
         type: DataTypes.JSON,
         allowNull: false,
         primaryKey: true,
+        // No foreign key reference on JSON column
       },
     }, {
       sequelize,
-      modelName: 'RolePermission',
-      tableName: 'role_permissions',
+      modelName: 'UserPermission',
+      tableName: 'user_permissions',
       timestamps: false,
     });
   }
 }
 
-export default RolePermission;
+export default UserPermission;

@@ -5,6 +5,7 @@ import User from './user.js';
 import Role from './role.js';
 import Permission from './permission.js';
 import RolePermission from './rolePermission.js';
+import UserPermission from './userPermission.js';
 
 const db = {};
 const env = process.env.NODE_ENV || 'development';
@@ -35,6 +36,7 @@ User.init(sequelize, DataTypes);
 Role.init(sequelize, DataTypes);
 Permission.init(sequelize, DataTypes);
 RolePermission.init(sequelize); // ✅ Only pass sequelize as you did in your class
+UserPermission.init(sequelize);
 
 // Add models to db object
 db.sequelize = sequelize;
@@ -44,23 +46,24 @@ db.User = User;
 db.Role = Role;
 db.Permission = Permission;
 db.RolePermission = RolePermission;
+db.UserPermission = UserPermission;
 
 // Define associations
-db.User.belongsTo(db.Role, { foreignKey: 'roleId', as: 'role' });
-db.Role.hasMany(db.User, { foreignKey: 'roleId', as: 'users' });
+//   db.User.belongsTo(db.Role, { foreignKey: 'roleId', as: 'role' });
+//   db.Role.hasMany(db.User, { foreignKey: 'roleId', as: 'users' });
 
-db.Role.belongsToMany(db.Permission, {
-  through: db.RolePermission,
-  foreignKey: 'role_id',
-  otherKey: 'permission_id',
-  as: 'permissions',
-});
+// db.Role.belongsToMany(db.Permission, {
+//   through: db.RolePermission,
+//   foreignKey: 'role_id',
+//   otherKey: 'permission_id',
+//   as: 'permissions',
+// });
 
-db.Permission.belongsToMany(db.Role, {
-  through: db.RolePermission,
-  foreignKey: 'permission_id',
-  otherKey: 'role_id',
-  as: 'roles',
-});
+// db.Permission.belongsToMany(db.Role, {
+//   through: db.RolePermission,
+//   foreignKey: 'permission_id',
+//   otherKey: 'role_id',
+//   as: 'roles',
+// });
 
 export default db;

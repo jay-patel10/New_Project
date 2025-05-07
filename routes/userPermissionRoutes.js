@@ -1,15 +1,15 @@
 import express from 'express';
-import { assignPermissionsToRole, removePermissionsFromRole } from '../controllers/rolePermissionController.js';
+import { assignPermissionsToUser, removePermissionsFromUser } from '../controllers/userPermissionController.js';
 
 const router = express.Router();
 
 /**
  * @swagger
- * /api/role-permissions/assign:
+ * /api/user-permissions/assign:
  *   post:
- *     summary: Assign permissions to a role
+ *     summary: Assign permissions to a user
  *     tags:
- *       - Role Permissions
+ *       - User Permissions
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -19,10 +19,10 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             required:
- *               - role_id
+ *               - user_id
  *               - permission_id
  *             properties:
- *               role_id:
+ *               user_id:
  *                 type: integer
  *                 example: 1
  *               permission_id:
@@ -40,15 +40,15 @@ const router = express.Router();
  *       500:
  *         description: Internal server error
  */
-router.post('/assign', assignPermissionsToRole);
+router.post('/assign', assignPermissionsToUser);
 
 /**
  * @swagger
- * /api/role-permissions/remove:
+ * /api/user-permissions/remove:
  *   post:
- *     summary: Remove permissions from a role
+ *     summary: Remove permissions from a user
  *     tags:
- *       - Role Permissions
+ *       - User Permissions
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -58,10 +58,10 @@ router.post('/assign', assignPermissionsToRole);
  *           schema:
  *             type: object
  *             required:
- *               - role_id
+ *               - user_id
  *               - permission_id
  *             properties:
- *               role_id:
+ *               user_id:
  *                 type: integer
  *                 example: 1
  *               permission_id:
@@ -79,6 +79,6 @@ router.post('/assign', assignPermissionsToRole);
  *       500:
  *         description: Internal server error
  */
-router.post('/remove', removePermissionsFromRole);
+router.post('/remove', removePermissionsFromUser);
 
 export default router;

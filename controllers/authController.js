@@ -4,8 +4,7 @@ import db from '../models/index.js';
 import moment from 'moment';
 import nodemailer from 'nodemailer';
 import { randomBytes } from 'crypto';
-
-const { User } = db;
+const { User,UserPermission,Permission } = db;
 
 export const registerUser = async (req, res) => {
   const { name, email, password, confirmPassword } = req.body;
@@ -172,33 +171,76 @@ export const verifyOtp = async (req, res) => {
     // Find the user by email
     const user = await User.findOne({ where: { email } });
 
-    // Check if the user exists, and if the OTP is valid and not expired
+    // Validate OTP and check expiration
     if (!user || user.otp !== otp || new Date(user.otp_expires_at) < new Date()) {
       return res.status(400).json({ message: 'Invalid or expired OTP' });
     }
 
-    // OTP is valid, so clear the OTP fields
-    user.is_verified = true;  // Mark the user as verified
-    user.otp = null;  // Clear the OTP
-    user.otp_expires_at = null;  // Clear the OTP expiration time
-    await user.save();  // Save the changes to the database
-
-    // Generate JWT token after successful OTP verification
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-      expiresIn: '1h',  // Token expiration time (1 hour)
+    // Get all user permissions
+    const userPermissions = await UserPermission.findAll({
+      where: { user_id: user.id },
+      attributes: ['permission_id'],
     });
 
-    // Store the token and its expiration in the database
-    user.login_token = token;
-    user.login_token_expires_at = new Date(Date.now() + 1 * 60 * 60 * 1000);  // Set the expiration time to 1 hour
-    await user.save();  // Save the updated user data with the token
+    let permissionIds = [];
 
-    // Respond with a success message and the generated JWT token
-    res.status(200).json({ message: 'Logged in successfully', token });
+    // Simplify logic to handle permission_id in different formats
+    for (const record of userPermissions) {
+      const raw = record.permission_id;
+
+      if (Array.isArray(raw)) {
+        permissionIds.push(...raw);  // Case 1: Already an array
+      } else if (typeof raw === 'string') {
+        try {
+          // Case 2: Stringified array (JSON string)
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) {
+            permissionIds.push(...parsed);
+          } else {
+            throw new Error('Not an array');
+          }
+        } catch {
+          // Case 3: Comma-separated string (Fallback)
+          permissionIds.push(...raw.split(',').map(id => parseInt(id.trim(), 10)).filter(Boolean));
+        }
+      }
+    }
+
+    // Remove duplicates and log the final permissionIds
+    permissionIds = [...new Set(permissionIds)];
+
+    // Fetch permissions
+    const permissions = await Permission.findAll({
+      where: { id: permissionIds },
+      attributes: ['name'],
+    });
+
+    const permissionNames = permissions.map(p => p.name);
+
+    // Generate token
+    const token = jwt.sign(
+      {
+        userId: user.id,
+        permissions: permissionNames,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    // Save token and expiration time to user
+    user.login_token = token;
+    user.login_token_expires_at = new Date(Date.now() + 60 * 60 * 1000); // 1 hour expiration
+    await user.save();
+
+    res.status(200).json({
+      message: 'OTP validated successfully, login successful',
+      token,
+      permissions: permissionNames,
+    });
 
   } catch (err) {
-    console.error('Error verifying OTP:', err);
-    res.status(500).json({ message: 'OTP verification failed. Please try again later.' });
+    console.error('Bypass OTP login error:', err);
+    res.status(500).json({ message: 'Bypass OTP login failed. Please try again later.' });
   }
 };
 
