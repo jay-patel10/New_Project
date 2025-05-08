@@ -1,27 +1,27 @@
 import express from 'express';
 import {
-  createRole,
-  getAllRoles,
-  getRoleById,
-  updateRole,
-  deleteRole,
-} from '../controllers/roleController.js';
+  createUser,
+  getUserById,
+  updateUser,
+  deleteUser,
+  getAllUsers,
+} from '../controllers/userController.js';
 
 const router = express.Router();
 
 /**
  * @swagger
  * tags:
- *   name: Roles
- *   description: Role management
+ *   name: Users
+ *   description: User management
  */
 
 /**
  * @swagger
- * /api/roles:
+ * /api/users:
  *   post:
- *     summary: Create a new role
- *     tags: [Roles]
+ *     summary: Create a new user
+ *     tags: [Users]
  *     requestBody:
  *       required: true
  *       content:
@@ -29,25 +29,31 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             required:
- *               - role
+ *               - name
+ *               - email
+ *               - password
  *             properties:
- *               role:
+ *               name:
  *                 type: string
- *               status:
- *                 type: boolean
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
  *     responses:
  *       201:
- *         description: Role created successfully
+ *         description: User created successfully
  *       400:
  *         description: Bad request
  */
-router.post('/', createRole);
+router.post('/', createUser);
+
+
 /**
  * @swagger
- * /api/roles/getAllRoles:
+ * /api/users/getAllUsers:
  *   post:
- *     summary: Get all roles (paginated)
- *     tags: [Roles]
+ *     summary: Get all users (paginated)
+ *     tags: [Users]
  *     requestBody:
  *       required: false
  *       content:
@@ -58,14 +64,12 @@ router.post('/', createRole);
  *               page:
  *                 type: integer
  *                 default: 1
- *                 description: Page number (optional)
  *               limit:
  *                 type: integer
  *                 default: 10
- *                 description: Number of items per page (optional)
  *     responses:
  *       200:
- *         description: Paginated list of roles
+ *         description: Paginated list of users
  *         content:
  *           application/json:
  *             schema:
@@ -82,16 +86,15 @@ router.post('/', createRole);
  *                 data:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/Role'
+ *                     $ref: '#/components/schemas/User'
  */
-router.post('/getAllRoles', getAllRoles);
-
+router.post('/getAllUsers', getAllUsers);
 /**
  * @swagger
- * /api/roles/{id}:
+ * /api/users/{id}:
  *   get:
- *     summary: Get a role by ID
- *     tags: [Roles]
+ *     summary: Get a user by ID
+ *     tags: [Users]
  *     parameters:
  *       - in: path
  *         name: id
@@ -100,18 +103,18 @@ router.post('/getAllRoles', getAllRoles);
  *           type: integer
  *     responses:
  *       200:
- *         description: Role found
+ *         description: User found
  *       404:
- *         description: Role not found
+ *         description: User not found
  */
-router.get('/:id', getRoleById);
+router.get('/:id', getUserById);
 
 /**
  * @swagger
- * /api/roles/{id}:
+ * /api/users/{id}:
  *   put:
- *     summary: Update a role
- *     tags: [Roles]
+ *     summary: Update a user
+ *     tags: [Users]
  *     parameters:
  *       - in: path
  *         name: id
@@ -125,24 +128,24 @@ router.get('/:id', getRoleById);
  *           schema:
  *             type: object
  *             properties:
- *               role:
+ *               name:
  *                 type: string
- *               status:
- *                 type: boolean
+ *               email:
+ *                 type: string
  *     responses:
  *       200:
- *         description: Role updated
+ *         description: User updated
  *       404:
- *         description: Role not found
+ *         description: User not found
  */
-router.put('/:id', updateRole);
+router.put('/:id', updateUser);
 
 /**
  * @swagger
- * /api/roles/{id}:
+ * /api/users/{id}:
  *   delete:
- *     summary: Delete a role
- *     tags: [Roles]
+ *     summary: Delete a user
+ *     tags: [Users]
  *     parameters:
  *       - in: path
  *         name: id
@@ -151,10 +154,10 @@ router.put('/:id', updateRole);
  *           type: integer
  *     responses:
  *       200:
- *         description: Role deleted
+ *         description: User deleted
  *       404:
- *         description: Role not found
+ *         description: User not found
  */
-router.delete('/:id', deleteRole);
+router.delete('/:id', deleteUser);
 
 export default router;

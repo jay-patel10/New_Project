@@ -28,12 +28,33 @@ export const createPermission = async (req, res) => {
 // Get all permissions
 export const getAllPermissions = async (req, res) => {
   try {
-    const permissions = await Permission.findAll();
-    res.json(permissions);
+    const { page = 1, limit = 10 } = req.body;
+
+    if (isNaN(page) || page <= 0 || isNaN(limit) || limit <= 0) {
+      return res.status(400).json({ message: 'Invalid pagination parameters' });
+    }
+    
+    const offset = (page - 1) * limit;
+    const total = await Permission.count();
+
+    const permissions = await Permission.findAll({
+      limit,
+      offset,
+    });
+
+    res.status(200).json({
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+      data: permissions,
+    });
   } catch (err) {
     res.status(500).json({ message: 'Error fetching permissions', error: err.message });
   }
 };
+
+
 
 // Get permission by ID
 export const getPermissionById = async (req, res) => {

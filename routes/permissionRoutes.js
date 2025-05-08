@@ -79,21 +79,50 @@ router.post('/', createPermission);
 
 /**
  * @swagger
- * /api/permissions:
- *   get:
- *     summary: Get all permissions
+ * /api/permissions/getAllPermissions:
+ *   post:
+ *     summary: Get all permissions (paginated)
  *     tags: [Permissions]
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               page:
+ *                 type: integer
+ *                 example: 1
+ *                 description: Page number (optional)
+ *               limit:
+ *                 type: integer
+ *                 example: 10
+ *                 description: Number of items per page (optional)
+ *             example:
+ *               page: 1
+ *               limit: 10
  *     responses:
  *       200:
- *         description: List of permissions
+ *         description: Paginated list of permissions
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Permission'
+ *               type: object
+ *               properties:
+ *                 page:
+ *                   type: integer
+ *                 limit:
+ *                   type: integer
+ *                 total:
+ *                   type: integer
+ *                 totalPages:
+ *                   type: integer
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Permission'
  */
-router.get('/', getAllPermissions);
+router.post('/getAllPermissions', getAllPermissions);
 
 /**
  * @swagger

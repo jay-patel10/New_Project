@@ -20,11 +20,39 @@ export const createRole = async (req, res) => {
 
 export const getAllRoles = async (req, res) => {
   try {
-    const roles = await Role.findAll();
-    res.status(200).json({ data: roles });
-  } catch (error) {
-    console.error('Error fetching roles:', error);
-    res.status(500).json({ error: 'Internal server error.' });
+    const page = parseInt(req.body.page, 10) || 1;
+    const limit = parseInt(req.body.limit, 10) || 10;
+
+    if (page <= 0 || limit <= 0) {
+      return res.status(400).json({ message: 'Invalid pagination parameters' });
+    }
+
+    const offset = (page - 1) * limit;
+    const total = await Role.count();
+    const totalPages = Math.ceil(total / limit);
+
+    if (offset >= total) {
+      return res.status(200).json({
+        page,
+        limit,
+        total,
+        totalPages,
+        data: [],
+      });
+    }
+
+    const roles = await Role.findAll({ limit, offset });
+
+    res.status(200).json({
+      page,
+      limit,
+      total,
+      totalPages,
+      data: roles,
+    });
+
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching roles', error: err.message });
   }
 };
 

@@ -9,6 +9,7 @@ import roleRoutes from './routes/roleRoutes.js';
 import permissionRoutes from './routes/permissionRoutes.js'
 import rolePermissionRoutes from './routes/rolePermissionRoutes.js';
 import userPermissionRoutes from './routes/userPermissionRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 dotenv.config();
 const app = express();
@@ -23,11 +24,13 @@ app.use('/api/auth', authRoutes);
 
 app.use('/api/roles',roleRoutes);
 
-app.use('/api/permissions',verifyToken,permissionRoutes)
+app.use('/api/permissions',permissionRoutes)
 
 app.use('/api/role-permissions' ,rolePermissionRoutes)
 
 app.use('/api/user-permissions' ,userPermissionRoutes)
+
+app.use('/api/users', userRoutes)
 
 
 // Root Route
