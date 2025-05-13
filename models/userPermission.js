@@ -2,29 +2,31 @@ import { Model, DataTypes } from 'sequelize';
 
 class UserPermission extends Model {
   static init(sequelize) {
-    return super.init({
-      user_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        primaryKey: true,
-        references: {
-          model: 'users', // ✅ users table
-          key: 'id',
+    return super.init(
+      {
+        userId: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          primaryKey: true,
+          references: {
+            model: 'users',
+            key: 'id',
+          },
+          onDelete: 'CASCADE',
         },
-        onDelete: 'CASCADE',
+        permissionId: {
+          type: DataTypes.JSON,
+          allowNull: false,
+          primaryKey: true,
+        },
       },
-      permission_id: {
-        type: DataTypes.JSON,
-        allowNull: false,
-        primaryKey: true,
-        // No foreign key reference on JSON column
-      },
-    }, {
-      sequelize,
-      modelName: 'UserPermission',
-      tableName: 'user_permissions',
-      timestamps: false,
-    });
+      {
+        sequelize,
+        modelName: 'UserPermission',
+        tableName: 'user_permissions',
+        timestamps: false,
+      }
+    );
   }
 }
 

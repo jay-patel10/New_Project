@@ -1,40 +1,59 @@
 import db from '../models/index.js';
-const { UserPermission } = db;
+const { UserPermission, Permission } = db;
+import { Op } from 'sequelize';
 
 export const assignPermissionsToUser = async (req, res) => {
   const { user_id, permission_id } = req.body;
 
   // Validate inputs
   if (!user_id || !Array.isArray(permission_id) || permission_id.length === 0) {
-    return res.status(400).json({ message: 'user_id and permission_id are required' });
+    return res.status(400).json({ status: 'error', message: 'user_id and permission_id are required' });
   }
 
   try {
-    // Check if the user already has a permission record
-    let userPermission = await UserPermission.findOne({ where: { user_id } });
+    // Validate that all permission_ids are valid (exist in the database)
+    const validPermissions = await Permission.findAll({
+      where: {
+        id: { [Op.in]: permission_id },
+      },
+    });
 
-    if (!userPermission) {
-      // No existing permission, create a new record
-      await UserPermission.create({
-        user_id,
-        permission_id: permission_id, // Directly store permission_id as an array
-      });
-    } else {
-      // Existing permissions, update the list
-      const currentPermissions = userPermission.permission_id || []; // Directly access permission_id (already an array)
-      console.log('Current Permissions:', currentPermissions);
-
-      const updatedPermissions = [...new Set([...currentPermissions, ...permission_id])]; // Merge and remove duplicates
-      console.log('Updated Permissions:', updatedPermissions);
-
-      userPermission.permission_id = updatedPermissions; // Update with new permissions (as an array)
-      await userPermission.save();
+    if (validPermissions.length !== permission_id.length) {
+      return res.status(400).json({ status: 'error', message: 'Some permission_ids are invalid' });
     }
 
-    res.status(200).json({ message: 'Permissions assigned to user successfully' });
+    // Begin a transaction to ensure atomicity
+    const transaction = await db.sequelize.transaction();
+
+    try {
+      let userPermission = await UserPermission.findOne({ where: { user_id }, transaction });
+
+      if (!userPermission) {
+        // No existing permission, create a new record
+        await UserPermission.create({
+          user_id,
+          permission_id, // Store permission_id as an array
+        }, { transaction });
+      } else {
+        // Existing permissions, update the list
+        const currentPermissions = userPermission.permission_id || [];
+        const updatedPermissions = [...new Set([...currentPermissions, ...permission_id])]; // Merge and remove duplicates
+
+        userPermission.permission_id = updatedPermissions; // Update with new permissions (as an array)
+        await userPermission.save({ transaction });
+      }
+
+      await transaction.commit();
+      res.status(200).json({ status: 'success', message: 'Permissions assigned to user successfully' });
+    } catch (err) {
+      await transaction.rollback();
+      console.error('Error assigning permissions:', err);
+      res.status(500).json({ status: 'error', message: 'Error assigning permissions', error: err.message });
+    }
+
   } catch (err) {
     console.error('Error assigning permissions:', err);
-    res.status(500).json({ message: 'Error assigning permissions', error: err.message });
+    res.status(500).json({ status: 'error', message: 'Error assigning permissions', error: err.message });
   }
 };
 
@@ -43,31 +62,37 @@ export const removePermissionsFromUser = async (req, res) => {
 
   // Validate inputs
   if (!user_id || !Array.isArray(permission_id) || permission_id.length === 0) {
-    return res.status(400).json({ message: 'user_id and permission_id are required' });
+    return res.status(400).json({ status: 'error', message: 'user_id and permission_id are required' });
   }
 
   try {
-    // Check if the user has permissions
-    let userPermission = await UserPermission.findOne({ where: { user_id } });
+    // Begin a transaction to ensure atomicity
+    const transaction = await db.sequelize.transaction();
 
-    if (!userPermission) {
-      return res.status(404).json({ message: 'User permission entry not found' });
+    try {
+      let userPermission = await UserPermission.findOne({ where: { user_id }, transaction });
+
+      if (!userPermission) {
+        return res.status(404).json({ status: 'error', message: 'User permission entry not found' });
+      }
+
+      // Get current permissions and filter out the ones to be removed
+      const currentPermissions = userPermission.permission_id || [];
+      const updatedPermissions = currentPermissions.filter(perm => !permission_id.includes(perm));
+
+      userPermission.permission_id = updatedPermissions; // Update permission_id as an array
+      await userPermission.save({ transaction });
+
+      await transaction.commit();
+      res.status(200).json({ status: 'success', message: 'Permissions removed from user successfully' });
+    } catch (err) {
+      await transaction.rollback();
+      console.error('Error removing permissions:', err);
+      res.status(500).json({ status: 'error', message: 'Error removing permissions', error: err.message });
     }
 
-    // Get current permissions and filter out the ones to be removed
-    const currentPermissions = userPermission.permission_id || [];
-    console.log('Current Permissions Before Removal:', currentPermissions);
-
-    const updatedPermissions = currentPermissions.filter(perm => !permission_id.includes(perm));
-    console.log('Updated Permissions After Removal:', updatedPermissions);
-
-    // Save the updated permissions
-    userPermission.permission_id = updatedPermissions; // Directly update permission_id as an array
-    await userPermission.save();
-
-    res.status(200).json({ message: 'Permissions removed from user successfully' });
   } catch (err) {
     console.error('Error removing permissions:', err);
-    res.status(500).json({ message: 'Error removing permissions', error: err.message });
+    res.status(500).json({ status: 'error', message: 'Error removing permissions', error: err.message });
   }
 };

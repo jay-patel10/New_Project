@@ -1,7 +1,7 @@
 'use strict';
 
 export async function up(queryInterface, Sequelize) {
-  await queryInterface.bulkInsert('Companies', [
+  await queryInterface.bulkInsert('companies', [
     {
       companyName: 'TechNova Inc.',
       companyAddress: '123 Innovation Blvd',
@@ -39,5 +39,5 @@ export async function up(queryInterface, Sequelize) {
 }
 
 export async function down(queryInterface, Sequelize) {
-  await queryInterface.bulkDelete('Companies', null, {});
+  await queryInterface.bulkDelete('companies', null, {});
 }

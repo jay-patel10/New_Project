@@ -18,11 +18,11 @@ class Permission extends Model {
           type: DataTypes.BOOLEAN,
           defaultValue: true,
         },
-        created_by: {
+        createdBy: {
           type: DataTypes.STRING(255),
           allowNull: false,
         },
-        updated_by: {
+        updatedBy: {
           type: DataTypes.STRING(255),
           allowNull: true,
         },
@@ -32,8 +32,8 @@ class Permission extends Model {
         modelName: 'Permission',
         tableName: 'permissions',
         timestamps: true,
-        createdAt: 'created_at',
-        updatedAt: 'updated_at',
+        createdAt: 'createdAt',
+        updatedAt: 'updatedAt',
       }
     );
   }

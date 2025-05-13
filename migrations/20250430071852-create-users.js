@@ -24,40 +24,45 @@ export const up = async (queryInterface, Sequelize) => {
       type: Sequelize.STRING(10),
       allowNull: true,
     },
-    otp_expires_at: {
+    otpExpiresAt: {
       type: Sequelize.DATE,
       allowNull: true,
     },
-    verification_token: {
+    verificationToken: {
       type: Sequelize.STRING(255),
       allowNull: true,
     },
-    verification_deadline: {
+    verificationDeadline: {
       type: Sequelize.DATE,
       allowNull: true,
     },
-    is_verified: {
+    isVerified: {
       type: Sequelize.BOOLEAN,
       defaultValue: false,
     },
-    login_token: {
+    loginToken: {
       type: Sequelize.TEXT,
       allowNull: true,
     },
-    login_token_expires_at: {
+    loginTokenExpiresAt: {
       type: Sequelize.DATE,
       allowNull: true,
     },
-    created_at: {
+    companyId: {
+      type: Sequelize.INTEGER,
+      allowNull: true, // FK not enforced here
+      // references block intentionally omitted
+    },
+    createdAt: {
       type: Sequelize.DATE,
       allowNull: false,
       defaultValue: Sequelize.NOW,
     },
-    updated_at: {
+    updatedAt: {
       type: Sequelize.DATE,
       allowNull: false,
       defaultValue: Sequelize.NOW,
-    }
+    },
   });
 };
 

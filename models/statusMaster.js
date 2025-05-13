@@ -16,7 +16,7 @@ class StatusMaster extends Model {
       {
         sequelize,
         modelName: 'StatusMaster',
-        tableName: 'StatusMasters',
+        tableName: 'status_masters',
         timestamps: true,
       }
     );

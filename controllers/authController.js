@@ -4,7 +4,7 @@ import db from '../models/index.js';
 import moment from 'moment';
 import nodemailer from 'nodemailer';
 import { randomBytes } from 'crypto';
-const { User,UserPermission,Permission } = db;
+const { User, UserPermission, Permission } = db;
 
 export const registerUser = async (req, res) => {
   const { name, email, password, confirmPassword } = req.body;
@@ -32,9 +32,9 @@ export const registerUser = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      is_verified: false,
-      verification_token: verificationToken,
-      verification_deadline: verificationDeadline,
+      isVerified: false,
+      verificationToken,
+      verificationDeadline,
     });
 
     const verificationLink = `https://yourapp.com/verify?token=${verificationToken}`;
@@ -78,20 +78,20 @@ export const verifyEmail = async (req, res) => {
     }
 
     // Find the user with the matching token
-    const user = await User.findOne({ where: { verification_token: token } });
+    const user = await User.findOne({ where: { verificationToken: token } });
 
     if (
       !user ||
-      !user.verification_deadline ||
-      new Date(user.verification_deadline) < new Date()
+      !user.verificationDeadline ||
+      new Date(user.verificationDeadline) < new Date()
     ) {
       return res.status(400).json({ message: 'Invalid or expired verification token' });
     }
 
     // Clear verification fields and mark user as verified
-    user.is_verified = true;
-    user.verification_token = null;
-    user.verification_deadline = null;
+    user.isVerified = true;
+    user.verificationToken = null;
+    user.verificationDeadline = null;
     await user.save();
 
     res.status(200).json({
@@ -116,7 +116,7 @@ export const loginUser = async (req, res) => {
     }
 
     // Check if the user is verified
-    if (!user.is_verified) {
+    if (!user.isVerified) {
       return res.status(400).json({ message: 'Please verify your email first.' });
     }
 
@@ -132,7 +132,7 @@ export const loginUser = async (req, res) => {
 
     // Store OTP and its expiration in the database
     user.otp = otp;
-    user.otp_expires_at = otpExpiresAt;
+    user.otpExpiresAt = otpExpiresAt;
     await user.save();  // Make sure to save the OTP and expiration time to the database
 
     // Create transporter using user-provided email and password for SMTP authentication
@@ -172,21 +172,21 @@ export const verifyOtp = async (req, res) => {
     const user = await User.findOne({ where: { email } });
 
     // Validate OTP and check expiration
-    if (!user || user.otp !== otp || new Date(user.otp_expires_at) < new Date()) {
+    if (!user || user.otp !== otp || new Date(user.otpExpiresAt) < new Date()) {
       return res.status(400).json({ message: 'Invalid or expired OTP' });
     }
 
     // Get all user permissions
     const userPermissions = await UserPermission.findAll({
-      where: { user_id: user.id },
-      attributes: ['permission_id'],
+      where: { userId: user.id },
+      attributes: ['permissionId'],
     });
 
     let permissionIds = [];
 
     // Simplify logic to handle permission_id in different formats
     for (const record of userPermissions) {
-      const raw = record.permission_id;
+      const raw = record.permissionId;
 
       if (Array.isArray(raw)) {
         permissionIds.push(...raw);  // Case 1: Already an array
@@ -228,8 +228,8 @@ export const verifyOtp = async (req, res) => {
     );
 
     // Save token and expiration time to user
-    user.login_token = token;
-    user.login_token_expires_at = new Date(Date.now() + 60 * 60 * 1000); // 1 hour expiration
+    user.loginToken = token;
+    user.loginTokenExpiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour expiration
     await user.save();
 
     res.status(200).json({
@@ -262,44 +262,40 @@ export const forgotPassword = async (req, res) => {
 
     // Step 2: Generate a password reset token and expiration
     const resetToken = randomBytes(32).toString('hex');
-    const resetTokenExpiry = moment().add(30, 'minutes').toDate();  // Token valid for 30 minutes
+    const resetTokenExpiry = moment().add(30, 'minutes').toDate();
 
-    // Step 3: Store token and expiration in the database
-    user.verification_token = resetToken;
-    user.verification_deadline = resetTokenExpiry;
+    user.resetToken = resetToken;
+    user.resetTokenExpiry = resetTokenExpiry;
     await user.save();
 
-    // Step 4: Send password reset email
+    // Step 3: Send the reset email
     const resetLink = `https://yourapp.com/reset-password?token=${resetToken}`;
 
+    // ✅ Send reset email via Mailtrap
     const transporter = nodemailer.createTransport({
       host: 'sandbox.smtp.mailtrap.io',
       port: 2525,
       auth: {
-        user: '3053bf6e834ff8', // your Mailtrap username
-        pass: '378d0227ee763d'  // your Mailtrap password
+        user: '3053bf6e834ff8',
+        pass: '378d0227ee763d',
       }
     });
 
     const mailOptions = {
-      from: `"NoReply" <${process.env.EMAIL_SENDER}>`,
+      from: '"NoReply" <no-reply@yourapp.com>',
       to: email,
       subject: 'Password Reset Request',
-      text: `Hello, \n\nWe received a request to reset your password. Please click the link below to reset your password. The link will expire in 30 minutes.\n\n${resetLink}`,
+      text: `Hello ${user.name},\n\nTo reset your password, click the link below (this link expires in 30 minutes):\n\n${resetLink}`,
     };
 
-    // Send the reset email
     const info = await transporter.sendMail(mailOptions);
-    console.log(`📧 Password reset email sent: ${info.messageId}`);
-    console.log(`🔗 Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
+    console.log(`📧 Reset email sent: ${info.messageId}`);
 
-    res.status(200).json({
-      message: 'Password reset email sent. Please check your inbox.',
-    });
+    res.status(200).json({ message: 'Password reset link has been sent to your email.' });
 
   } catch (err) {
-    console.error('❌ Forgot password error:', err);
-    res.status(500).json({ error: 'An error occurred while requesting password reset.' });
+    console.error('Error sending reset email:', err);
+    res.status(500).json({ error: 'Error sending password reset email. Please try again later.' });
   }
 };
 
@@ -315,20 +311,20 @@ export const verifyForgotPasswordToken = async (req, res) => {
       return res.status(400).json({ message: 'Passwords do not match' });
     }
 
-    const user = await User.findOne({ where: { verification_token: token } });
+    const user = await User.findOne({ where: { verificationToken: token } });
 
     if (
       !user ||
       !user.verification_deadline ||
-      new Date(user.verification_deadline) < new Date()
+      new Date(user.verificationDeadline) < new Date()
     ) {
       return res.status(400).json({ message: 'Invalid or expired token' });
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
-    user.verification_token = null;
-    user.verification_deadline = null;
+    user.verificationToken = null;
+    user.verificationTeadline = null;
     await user.save();
 
     res.status(200).json({ message: 'Password reset successful' });
@@ -339,57 +335,40 @@ export const verifyForgotPasswordToken = async (req, res) => {
 };
 
 export const resetPassword = async (req, res) => {
+  const { token, newPassword } = req.body;
+
+  if (!token || !newPassword) {
+    return res.status(400).json({ error: 'Token and new password are required.' });
+  }
+
   try {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
+    // Find the user by reset token
+    const user = await User.findOne({ where: { resetToken: token } });
 
-    if (!token) {
-      return res.status(401).json({ message: 'Authorization token missing.' });
+    // Validate the token and expiration
+    if (!user || new Date(user.resetTokenExpiry) < new Date()) {
+      return res.status(400).json({ error: 'Invalid or expired reset token.' });
     }
 
-    let decoded;
-    try {
-      decoded = jwt.verify(token, process.env.JWT_SECRET);
-    } catch (err) {
-      return res.status(403).json({ message: 'Invalid or expired token.' });
-    }
-
-    const { oldPassword, newPassword, confirmNewPassword } = req.body;
-
-    if (!oldPassword || !newPassword || !confirmNewPassword) {
-      return res.status(400).json({ message: 'All fields are required.' });
-    }
-
-    if (newPassword !== confirmNewPassword) {
-      return res.status(400).json({ message: 'New passwords do not match.' });
-    }
-
-    const user = await User.findByPk(decoded.userId);
-
-    if (!user) {
-      return res.status(404).json({ message: 'User not found.' });
-    }
-
-    const isMatch = await bcrypt.compare(oldPassword, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ message: 'Old password is incorrect.' });
-    }
-
+    // Hash the new password and update the user record
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
+    user.resetToken = null;
+    user.resetTokenExpiry = null;
     await user.save();
 
-    res.status(200).json({ message: 'Password updated successfully.' });
+    res.status(200).json({ message: 'Password reset successful. You can now log in.' });
+
   } catch (err) {
-    console.error('Password reset error:', err);
-    res.status(500).json({ message: 'Failed to reset password.' });
+    console.error('Error resetting password:', err);
+    res.status(500).json({ error: 'Error resetting password. Please try again later.' });
   }
 };
 
 export const logoutUser = async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
-    
+
     // Check if the authorization header exists and is in the correct format
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({ message: 'Authorization token missing or malformed' });
@@ -414,8 +393,8 @@ export const logoutUser = async (req, res) => {
     }
 
     // Clear token and expiration fields in the database
-    user.login_token = null;
-    user.login_token_expires_at = null;
+    user.loginToken = null;
+    user.loginTokenExpiresAt = null;
 
     // Save the user record with the cleared token fields
     await user.save();

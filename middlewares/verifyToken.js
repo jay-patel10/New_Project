@@ -12,20 +12,20 @@ const verifyToken = async (req, res, next) => {
 
   try {
     // Find user by login token
-    const user = await User.findOne({ where: { login_token: token } });
+    const user = await User.findOne({ where: { loginToken: token } }); // Updated to camelCase
 
     if (!user) {
       return res.status(401).json({ message: 'Invalid token or user not found' });
     }
 
     // Check if the token is expired
-    if (!user.login_token_expires_at || new Date(user.login_token_expires_at) < new Date()) {
+    if (!user.loginTokenExpiresAt || new Date(user.loginTokenExpiresAt) < new Date()) { // Updated to camelCase
       return res.status(401).json({ message: 'Token expired' });
     }
 
     // Attach user info to the request
     req.user = {
-      user_id: user.id,
+      userId: user.id, // Updated to camelCase
       name: user.name,
     };
 

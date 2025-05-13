@@ -9,6 +9,7 @@ import UserPermission from './userPermission.js';
 import Company from './company.js';
 import Customer from './customer.js';
 import StatusMaster from './statusMaster.js';
+import SubscriptionPlan from './subscriptionPlan.js'; // Add subscriptionPlan model import
 
 const db = {};
 const env = process.env.NODE_ENV || 'development';
@@ -23,6 +24,10 @@ const sequelize = new Sequelize(
     host: dbConfig.host,
     dialect: dbConfig.dialect,
     logging: false,
+    define: {
+      freezeTableName: true,
+      underscored: false,
+    },
   }
 );
 
@@ -43,6 +48,7 @@ UserPermission.init(sequelize);
 Company.init(sequelize, DataTypes);
 Customer.init(sequelize, DataTypes);
 StatusMaster.init(sequelize, DataTypes);
+SubscriptionPlan.init(sequelize, DataTypes); // Initialize subscriptionPlan model
 
 // Add models to db object
 db.sequelize = sequelize;
@@ -56,27 +62,17 @@ db.UserPermission = UserPermission;
 db.Company = Company;
 db.Customer = Customer;
 db.StatusMaster = StatusMaster;
+db.SubscriptionPlan = SubscriptionPlan; // Add subscriptionPlan to db object
 
 // Define associations
 
-// db.User.belongsTo(db.Role, { foreignKey: 'roleId', as: 'role' });
-// db.Role.hasMany(db.User, { foreignKey: 'roleId', as: 'users' });
+// Associations for subscription plans (Example)
+// db.SubscriptionPlan.hasMany(db.Customer, { foreignKey: 'subscriptionPlanId', as: 'customers' });
+// db.Customer.belongsTo(db.SubscriptionPlan, { foreignKey: 'subscriptionPlanId', as: 'subscriptionPlan' });
 
-// db.Role.belongsToMany(db.Permission, {
-//   through: db.RolePermission,
-//   foreignKey: 'role_id',
-//   otherKey: 'permission_id',
-//   as: 'permissions',
-// });
+// db.Company.hasMany(db.SubscriptionPlan, { foreignKey: 'companyId', as: 'subscriptionPlans' });
+// db.SubscriptionPlan.belongsTo(db.Company, { foreignKey: 'companyId', as: 'company' });
 
-// db.Permission.belongsToMany(db.Role, {
-//   through: db.RolePermission,
-//   foreignKey: 'permission_id',
-//   otherKey: 'role_id',
-//   as: 'roles',
-// });
-
-// db.Company.hasMany(db.Customer, { foreignKey: 'companyId', as: 'customers' });
-// db.Customer.belongsTo(db.Company, { foreignKey: 'companyId', as: 'company' });
+// Define any other required associations for your models
 
 export default db;

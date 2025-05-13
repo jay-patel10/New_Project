@@ -49,7 +49,7 @@ class Customer extends Model {
       {
         sequelize,
         modelName: 'Customer',
-        tableName: 'Customers',
+        tableName: 'customers',
         timestamps: true,
       }
     );

@@ -1,7 +1,7 @@
 'use strict';
 
 export async function up(queryInterface, Sequelize) {
-  await queryInterface.bulkInsert('Customers', [
+  await queryInterface.bulkInsert('customers', [
     {
       customerName: 'Alice Johnson',
       city: 'New York',
@@ -54,5 +54,5 @@ export async function up(queryInterface, Sequelize) {
 }
 
 export async function down(queryInterface, Sequelize) {
-  await queryInterface.bulkDelete('Customers', null, {});
+  await queryInterface.bulkDelete('customers', null, {});
 }

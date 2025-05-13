@@ -15,20 +15,20 @@ export default {
         type: Sequelize.BOOLEAN,
         defaultValue: true,
       },
-      created_by: {
+      createdBy: {
         type: Sequelize.STRING(255),
         allowNull: false,
       },
-      updated_by: {
+      updatedBy: {
         type: Sequelize.STRING(255),
         allowNull: false,
       },
-      created_at: {
+      createdAt: {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
-      updated_at: {
+      updatedAt: {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),

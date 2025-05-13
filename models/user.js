@@ -26,36 +26,46 @@ class User extends Model {
           type: DataTypes.STRING(10),
           allowNull: true,
         },
-        otp_expires_at: {
+        otpExpiresAt: {
           type: DataTypes.DATE,
           allowNull: true,
         },
-        verification_token: {
+        verificationToken: {
           type: DataTypes.STRING(255),
           allowNull: true,
         },
-        verification_deadline: {
+        verificationDeadline: {
           type: DataTypes.DATE,
           allowNull: true,
         },
-        is_verified: {
+        isVerified: {
           type: DataTypes.BOOLEAN,
           defaultValue: false,
         },
-        login_token: {
+        loginToken: {
           type: DataTypes.TEXT,
           allowNull: true,
         },
-        login_token_expires_at: {
+        loginTokenExpiresAt: {
           type: DataTypes.DATE,
           allowNull: true,
         },
-        created_at: {
+        companyId: {
+          type: DataTypes.INTEGER,
+          allowNull: true,
+          references: {
+            model: 'Companies', // Reference to the 'Companies' table
+            key: 'id',          // Column that this foreign key refers to
+          },
+          onUpdate: 'CASCADE',    // What happens when the referenced row is updated
+          onDelete: 'SET NULL',   // What happens when the referenced row is deleted
+        },
+        createdAt: {
           type: DataTypes.DATE,
           allowNull: false,
           defaultValue: DataTypes.NOW,
         },
-        updated_at: {
+        updatedAt: {
           type: DataTypes.DATE,
           allowNull: false,
           defaultValue: DataTypes.NOW,
@@ -66,8 +76,8 @@ class User extends Model {
         modelName: 'User',
         tableName: 'users',
         timestamps: true,
-        createdAt: 'created_at',
-        updatedAt: 'updated_at',
+        createdAt: 'createdAt',
+        updatedAt: 'updatedAt',
       }
     );
   }

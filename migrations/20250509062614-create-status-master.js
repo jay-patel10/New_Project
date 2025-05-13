@@ -1,5 +1,5 @@
 export const up = async (queryInterface, Sequelize) => {
-  await queryInterface.createTable('StatusMasters', {
+  await queryInterface.createTable('status_masters', {  // Use camelCase for the table name
     id: {
       type: Sequelize.INTEGER,
       autoIncrement: true,
@@ -25,5 +25,5 @@ export const up = async (queryInterface, Sequelize) => {
 };
 
 export const down = async (queryInterface) => {
-  await queryInterface.dropTable('StatusMasters');
+  await queryInterface.dropTable('status_masters');  // Use camelCase for the table name
 };

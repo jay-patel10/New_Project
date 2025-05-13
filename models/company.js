@@ -31,7 +31,7 @@ class Company extends Model {
       {
         sequelize,
         modelName: 'Company',
-        tableName: 'Companies',
+        tableName: 'companies',
         timestamps: true,
       }
     );

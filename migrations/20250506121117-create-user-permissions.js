@@ -3,19 +3,15 @@
 export default {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('user_permissions', {
-      user_id: {
+      userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {
-          model: 'users',
-          key: 'id',
-        },
-        onDelete: 'CASCADE',
+        // Removed the references block
       },
-      permission_id: {
+      permissionId: {
         type: Sequelize.JSON,
         allowNull: false,
-        // No foreign key reference — JSON columns don't support it
+        // No foreign key reference or indexing on JSON
       }
     });
   },
