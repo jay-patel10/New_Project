@@ -55,10 +55,20 @@ class User extends Model {
           allowNull: true,
           references: {
             model: 'Companies', // Reference to the 'Companies' table
-            key: 'id',          // Column that this foreign key refers to
+            key: 'id',
           },
-          onUpdate: 'CASCADE',    // What happens when the referenced row is updated
-          onDelete: 'SET NULL',   // What happens when the referenced row is deleted
+          onUpdate: 'CASCADE',
+          onDelete: 'SET NULL',
+        },
+        subscriptionPlanId: {
+          type: DataTypes.INTEGER,
+          allowNull: true,
+          references: {
+            model: 'subscription_plans', // Reference to the 'subscription_plans' table
+            key: 'id',
+          },
+          onUpdate: 'CASCADE',
+          onDelete: 'SET NULL',
         },
         createdAt: {
           type: DataTypes.DATE,

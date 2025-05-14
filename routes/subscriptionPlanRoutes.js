@@ -63,31 +63,35 @@ router.post('/', createSubscriptionPlan);
 
 /**
  * @swagger
- * /api/subscription-plans:
- *   get:
- *     summary: Get all subscription plans
+ * /api/subscription-plans/get-subscription-plans:
+ *   post:
+ *     summary: Get all subscription plans with pagination
  *     tags:
  *       - Subscription Plans
  *     security:
  *       - bearerAuth: []
- *     parameters:
- *       - in: query
- *         name: page
- *         schema:
- *           type: integer
- *           default: 1
- *       - in: query
- *         name: limit
- *         schema:
- *           type: integer
- *           default: 10
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               page:
+ *                 type: integer
+ *                 example: 1
+ *               limit:
+ *                 type: integer
+ *                 example: 10
  *     responses:
  *       200:
  *         description: List of subscription plans
+ *       400:
+ *         description: Invalid pagination parameters
  *       500:
  *         description: Internal server error
  */
-router.get('/', getAllSubscriptionPlans);
+router.post('/get-subscription-plans', getAllSubscriptionPlans);
 
 /**
  * @swagger

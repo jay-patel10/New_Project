@@ -5,6 +5,8 @@ import {
   updateUser,
   deleteUser,
   getAllUsers,
+  subscribeUser,
+  unsubscribeUser,
 } from '../controllers/userController.js';
 
 const router = express.Router();
@@ -39,6 +41,8 @@ const router = express.Router();
  *                 type: string
  *               password:
  *                 type: string
+ *               subscriptionPlanId:
+ *                 type: integer
  *     responses:
  *       201:
  *         description: User created successfully
@@ -46,7 +50,6 @@ const router = express.Router();
  *         description: Bad request
  */
 router.post('/', createUser);
-
 
 /**
  * @swagger
@@ -70,25 +73,9 @@ router.post('/', createUser);
  *     responses:
  *       200:
  *         description: Paginated list of users
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 page:
- *                   type: integer
- *                 limit:
- *                   type: integer
- *                 total:
- *                   type: integer
- *                 totalPages:
- *                   type: integer
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/User'
  */
 router.post('/getAllUsers', getAllUsers);
+
 /**
  * @swagger
  * /api/users/{id}:
@@ -132,6 +119,10 @@ router.get('/:id', getUserById);
  *                 type: string
  *               email:
  *                 type: string
+ *               password:
+ *                 type: string
+ *               subscriptionPlanId:
+ *                 type: integer
  *     responses:
  *       200:
  *         description: User updated
@@ -159,5 +150,95 @@ router.put('/:id', updateUser);
  *         description: User not found
  */
 router.delete('/:id', deleteUser);
+
+/**
+ * @swagger
+ * /api/users/subscribe:
+ *   post:
+ *     summary: Subscribe user to a plan
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: integer
+ *                 description: ID of the user to subscribe
+ *                 example: 1
+ *               subscriptionPlanId:
+ *                 type: integer
+ *                 description: ID of the subscription plan to assign
+ *                 example: 1
+ *     responses:
+ *       200:
+ *         description: User subscribed to plan successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 message:
+ *                   type: string
+ *                   example: User subscribed to plan successfully.
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 1
+ *                     name:
+ *                       type: string
+ *                       example: John Doe
+ *                     email:
+ *                       type: string
+ *                       example: john.doe@gmail.com
+ *                     companyId:
+ *                       type: integer
+ *                       example: 1
+ *                     subscriptionPlanId:
+ *                       type: integer
+ *                       example: 1
+ *                     createdAt:
+ *                       type: string
+ *                       format: date-time
+ *                       example: "2025-05-14T07:21:02.000Z"
+ *                     updatedAt:
+ *                       type: string
+ *                       format: date-time
+ *                       example: "2025-05-14T07:21:02.000Z"
+ *       400:
+ *         description: Missing userId or subscriptionPlanId or invalid input
+ *       404:
+ *         description: User or plan not found
+ *       500:
+ *         description: Internal server error
+ */
+router.post('/subscribe', subscribeUser);
+
+/**
+ * @swagger
+ * /api/users/{id}/unsubscribe:
+ *   delete:
+ *     summary: Unsubscribe user from plan
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: User unsubscribed
+ *       404:
+ *         description: User not found
+ */
+router.delete('/:id/unsubscribe', unsubscribeUser);
 
 export default router;

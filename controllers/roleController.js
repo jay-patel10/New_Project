@@ -34,25 +34,25 @@ export const getAllRoles = async (req, res) => {
     if (offset >= total) {
       return res.status(200).json({
         page,
-        limit,
-        total,
         totalPages,
         data: [],
       });
     }
 
-    const roles = await Role.findAll({ limit, offset });
+    const roles = await Role.findAll({
+      limit,
+      offset
+    });
 
     res.status(200).json({
       page,
-      limit,
-      total,
       totalPages,
       data: roles,
     });
 
   } catch (err) {
-    res.status(500).json({ message: 'Error fetching roles', error: err.message });
+    console.error('Error fetching roles:', err);
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
 
@@ -98,11 +98,17 @@ export const deleteRole = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const deletedCount = await Role.destroy({ where: { id } });
-    if (!deletedCount) {
+    // First, find the role
+    const role = await Role.findByPk(id);
+
+    if (!role) {
       return res.status(404).json({ error: 'Role not found.' });
     }
-    res.status(200).json({ message: 'Role deleted successfully.' });
+    const roleName = role.role;
+
+    await Role.destroy({ where: { id } });
+
+    return res.status(200).json({ message: `${roleName} deleted` });
   } catch (error) {
     console.error('Error deleting role:', error);
     res.status(500).json({ error: 'Internal server error.' });

@@ -27,26 +27,23 @@ export const createSubscriptionPlan = async (req, res) => {
     res.status(500).json({ error: 'Internal server error.' });
   }
 };
-
-// Get all subscription plans with pagination
+// Get all subscription plans with pagination from request body
 export const getAllSubscriptionPlans = async (req, res) => {
   try {
-    const page = parseInt(req.query.page, 10) || 1;
-    const limit = parseInt(req.query.limit, 10) || 10;
+    const page = parseInt(req.body.page, 10) || 1;
+    const limit = parseInt(req.body.limit, 10) || 10;
 
     if (page <= 0 || limit <= 0) {
       return res.status(400).json({ message: 'Invalid pagination parameters' });
     }
 
-    const offset = (page - 1) * limit;
     const total = await SubscriptionPlan.count();
     const totalPages = Math.ceil(total / limit);
+    const offset = (page - 1) * limit;
 
     if (offset >= total) {
       return res.status(200).json({
         page,
-        limit,
-        total,
         totalPages,
         data: [],
       });
@@ -56,8 +53,6 @@ export const getAllSubscriptionPlans = async (req, res) => {
 
     res.status(200).json({
       page,
-      limit,
-      total,
       totalPages,
       data: subscriptionPlans,
     });
@@ -67,7 +62,6 @@ export const getAllSubscriptionPlans = async (req, res) => {
   }
 };
 
-// Get a single subscription plan by ID
 export const getSubscriptionPlanById = async (req, res) => {
   const { id } = req.params;
 
@@ -112,16 +106,18 @@ export const updateSubscriptionPlan = async (req, res) => {
   }
 };
 
-// Delete a subscription plan by ID
 export const deleteSubscriptionPlan = async (req, res) => {
-  const { id } = req.params;
-
   try {
-    const deletedCount = await SubscriptionPlan.destroy({ where: { id } });
-    if (!deletedCount) {
-      return res.status(404).json({ error: 'Subscription Plan not found.' });
+    const { id } = req.params;
+    const plan = await SubscriptionPlan.findByPk(id);
+
+    if (!plan) {
+      return res.status(404).json({ error: 'Subscription plan not found.' });
     }
-    res.status(200).json({ message: 'Subscription Plan deleted successfully.' });
+
+    await plan.destroy();
+
+    res.status(200).json({ message: `${plan.name} deleted successfully.` });
   } catch (error) {
     console.error('Error deleting subscription plan:', error);
     res.status(500).json({ error: 'Internal server error.' });

@@ -25,7 +25,6 @@ export const createPermission = async (req, res) => {
   }
 };
 
-// Get all permissions
 export const getAllPermissions = async (req, res) => {
   try {
     const { page = 1, limit = 10 } = req.body;
@@ -40,17 +39,17 @@ export const getAllPermissions = async (req, res) => {
     const permissions = await Permission.findAll({
       limit,
       offset,
+      order: [['createdAt', 'ASC']],
     });
 
     res.status(200).json({
-      page,
-      limit,
-      total,
+      page: parseInt(page),
       totalPages: Math.ceil(total / limit),
       data: permissions,
     });
   } catch (err) {
-    res.status(500).json({ message: 'Error fetching permissions', error: err.message });
+    console.error('Error fetching permissions:', err);
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
 
@@ -99,7 +98,7 @@ export const deletePermission = async (req, res) => {
     if (!permission) return res.status(404).json({ message: 'Permission not found' });
 
     await permission.destroy();
-    res.json({ message: 'Permission deleted successfully' });
+    return res.status(200).json({ message: `Permission ${permission.name} deleted `});
   } catch (err) {
     res.status(500).json({ message: 'Error deleting permission', error: err.message });
   }

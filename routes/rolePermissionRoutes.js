@@ -19,13 +19,13 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             required:
- *               - role_id
- *               - permission_id
+ *               - roleId
+ *               - permissionId
  *             properties:
- *               role_id:
+ *               roleId:
  *                 type: integer
  *                 example: 1
- *               permission_id:
+ *               permissionId:
  *                 type: array
  *                 items:
  *                   type: integer
@@ -58,13 +58,13 @@ router.post('/assign', assignPermissionsToRole);
  *           schema:
  *             type: object
  *             required:
- *               - role_id
- *               - permission_id
+ *               - roleId
+ *               - permissionId
  *             properties:
- *               role_id:
+ *               roleId:
  *                 type: integer
  *                 example: 1
- *               permission_id:
+ *               permissionId:
  *                 type: array
  *                 items:
  *                   type: integer

@@ -32,12 +32,16 @@ const router = express.Router();
  *             properties:
  *               name:
  *                 type: string
+ *                 example: Virat Kohli
  *               email:
  *                 type: string
+ *                 example: virat.kohli@example.com
  *               password:
  *                 type: string
+ *                 example: Virat@123
  *               confirmPassword:
  *                 type: string
+ *                 example: Virat@123
  *     responses:
  *       201:
  *         description: User registered successfully

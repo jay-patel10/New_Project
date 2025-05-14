@@ -19,13 +19,18 @@ export const createStatusMaster = async (req, res) => {
   }
 };
 
-// Get all StatusMasters (paginated)
 export const getAllStatusMasters = async (req, res) => {
   try {
     const { page = 1, limit = 10 } = req.body;
-    const offset = (page - 1) * limit;
 
-    const { count, rows } = await StatusMaster.findAndCountAll({
+    if (isNaN(page) || page <= 0 || isNaN(limit) || limit <= 0) {
+      return res.status(400).json({ message: 'Invalid pagination parameters' });
+    }
+
+    const offset = (page - 1) * limit;
+    const total = await StatusMaster.count();
+
+    const rows = await StatusMaster.findAll({
       offset,
       limit,
       order: [['createdAt', 'DESC']],
@@ -33,9 +38,7 @@ export const getAllStatusMasters = async (req, res) => {
 
     return res.status(200).json({
       page: parseInt(page),
-      limit: parseInt(limit),
-      total: count,
-      totalPages: Math.ceil(count / limit),
+      totalPages: Math.ceil(total / limit),
       data: rows,
     });
   } catch (error) {

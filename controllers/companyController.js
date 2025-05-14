@@ -19,19 +19,43 @@ export const createCompany = async (req, res) => {
       taxNumber,
     });
 
-    return res.status(201).json(newCompany);
+    return res.status(201).json({
+      message: `New company ${newCompany.companyName} created successfully.`
+    });
   } catch (error) {
     console.error('Error creating company:', error);
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
 
-// Get a company by ID
+export const getAllCompanies = async (req, res) => {
+  try {
+    const { page = 1, limit = 10 } = req.body;
+
+    const offset = (page - 1) * limit;
+
+    const { count, rows } = await Company.findAndCountAll({
+      offset,
+      limit,
+      order: [['createdAt', 'ASC']],
+    });
+
+    return res.status(200).json({
+      page: parseInt(page),
+      totalPages: Math.ceil(count / limit),
+      data: rows,
+    });
+  } catch (error) {
+    console.error('Error fetching companies:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 export const getCompanyById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const company = await Company.findByPk(id);
+    const company = await Company.findByPk(id); // No attributes excluded
 
     if (!company) {
       return res.status(404).json({ message: 'Company not found' });
@@ -44,7 +68,7 @@ export const getCompanyById = async (req, res) => {
   }
 };
 
-// Update a company
+// Update a company (return all fields including ID)
 export const updateCompany = async (req, res) => {
   try {
     const { id } = req.params;
@@ -65,7 +89,10 @@ export const updateCompany = async (req, res) => {
       taxNumber,
     });
 
-    return res.status(200).json({ message: 'Company updated', company });
+    return res.status(200).json({
+      message: 'Company updated successfully.',
+      data: company, // Includes all fields including ID
+    });
   } catch (error) {
     console.error('Error updating company:', error);
     return res.status(500).json({ message: 'Internal server error' });
@@ -85,35 +112,10 @@ export const deleteCompany = async (req, res) => {
 
     await company.destroy();
 
-    return res.status(200).json({ message: 'Company deleted' });
+    return res.status(200).json({ message: `Company ${company.companyName} deleted `});
   } catch (error) {
     console.error('Error deleting company:', error);
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
 
-// Get all companies (paginated)
-export const getAllCompanies = async (req, res) => {
-  try {
-    const { page = 1, limit = 10 } = req.body;
-
-    const offset = (page - 1) * limit;
-
-    const { count, rows } = await Company.findAndCountAll({
-      offset,
-      limit,
-      order: [['createdAt', 'DESC']],
-    });
-
-    return res.status(200).json({
-      page: parseInt(page),
-      limit: parseInt(limit),
-      total: count,
-      totalPages: Math.ceil(count / limit),
-      data: rows,
-    });
-  } catch (error) {
-    console.error('Error fetching companies:', error);
-    return res.status(500).json({ message: 'Internal server error' });
-  }
-};

@@ -1,22 +1,17 @@
 import db from '../models/index.js';
 import bcrypt from 'bcrypt';
-
 const { User } = db;
 
 export const createUser = async (req, res) => {
-  const { name, email, password, status = true } = req.body;
+  const { name, email, password } = req.body;
 
   if (!name || !email || !password) {
     return res.status(400).json({ status: 'error', message: 'Name, email, and password are required.' });
   }
 
-  // Validate email and password
-  if (!validateEmail(email)) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
     return res.status(400).json({ status: 'error', message: 'Invalid email format.' });
-  }
-
-  if (!validatePassword(password)) {
-    return res.status(400).json({ status: 'error', message: 'Password does not meet the required strength.' });
   }
 
   try {
@@ -31,18 +26,32 @@ export const createUser = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      is_verified: false,
+      isVerified: false,
     });
 
-    res.status(201).json({ status: 'success', message: 'User created successfully.', data: newUser });
+    const response = {
+      id: newUser.id,
+      name: newUser.name,
+      email: newUser.email,
+      companyId: newUser.companyId,
+      subscriptionPlanId: newUser.subscriptionPlanId,
+      createdAt: newUser.createdAt,
+      updatedAt: newUser.updatedAt,
+    };
+
+    return res.status(201).json({
+      status: 'success',
+      message: 'User created successfully.',
+      data: response,
+    });
   } catch (error) {
     console.error('Error creating user:', error);
-    res.status(500).json({ status: 'error', message: 'Internal server error.' });
+    return res.status(500).json({ status: 'error', message: 'Internal server error.' });
   }
 };
 
 export const getAllUsers = async (req, res) => {
-  const { page = 1, limit = 10 } = req.query;
+  const { page = 1, limit = 10 } = req.body;
 
   if (page <= 0 || limit <= 0) {
     return res.status(400).json({ status: 'error', message: 'Invalid pagination parameters.' });
@@ -53,23 +62,29 @@ export const getAllUsers = async (req, res) => {
     const total = await User.count();
     const totalPages = Math.ceil(total / limit);
 
-    if (offset >= total) {
-      return res.status(200).json({ status: 'success', page, limit, total, totalPages, data: [] });
-    }
-
-    const users = await User.findAll({ limit, offset });
-
-    res.status(200).json({
-      status: 'success',
-      page,
+    const users = await User.findAll({
       limit,
-      total,
+      offset,
+      order: [['createdAt', 'DESC']],
+      attributes: [
+        'id',
+        'name',
+        'email',
+        'companyId',
+        'subscriptionPlanId',
+        'createdAt',
+        'updatedAt',
+      ],
+    });
+
+    return res.status(200).json({
+      page: parseInt(page),
       totalPages,
       data: users,
     });
   } catch (err) {
     console.error('Error fetching users:', err);
-    res.status(500).json({ status: 'error', message: 'Error fetching users.', error: err.message });
+    return res.status(500).json({ status: 'error', message: 'Error fetching users.' });
   }
 };
 
@@ -77,25 +92,42 @@ export const getUserById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const user = await User.findByPk(id);
+    const user = await User.findByPk(id, {
+      attributes: [
+        'id',
+        'name',
+        'email',
+        'companyId',
+        'subscriptionPlanId',
+        'createdAt',
+        'updatedAt',
+      ],
+    });
+
     if (!user) {
       return res.status(404).json({ status: 'error', message: 'User not found.' });
     }
-    res.status(200).json({ status: 'success', data: user });
+
+    return res.status(200).json({ status: 'success', data: user });
   } catch (error) {
     console.error('Error fetching user:', error);
-    res.status(500).json({ status: 'error', message: 'Internal server error.' });
+    return res.status(500).json({ status: 'error', message: 'Internal server error.' });
   }
 };
-
 export const updateUser = async (req, res) => {
   const { id } = req.params;
   const { name, email, password, is_verified } = req.body;
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   try {
     const user = await User.findByPk(id);
     if (!user) {
       return res.status(404).json({ status: 'error', message: 'User not found.' });
+    }
+
+    if (email && !emailRegex.test(email)) {
+      return res.status(400).json({ status: 'error', message: 'Invalid email format.' });
     }
 
     user.name = name || user.name;
@@ -111,10 +143,24 @@ export const updateUser = async (req, res) => {
 
     await user.save();
 
-    res.status(200).json({ status: 'success', message: 'User updated successfully.', data: user });
+    const response = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      companyId: user.companyId,
+      subscriptionPlanId: user.subscriptionPlanId,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    };
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'User updated successfully.',
+      data: response,
+    });
   } catch (error) {
     console.error('Error updating user:', error);
-    res.status(500).json({ status: 'error', message: 'Internal server error.' });
+    return res.status(500).json({ status: 'error', message: 'Internal server error.' });
   }
 };
 
@@ -122,13 +168,88 @@ export const deleteUser = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const deleted = await User.destroy({ where: { id } });
-    if (!deleted) {
+    const user = await User.findByPk(id);
+    if (!user) {
       return res.status(404).json({ status: 'error', message: 'User not found.' });
     }
-    res.status(200).json({ status: 'success', message: 'User deleted successfully.' });
+
+    await user.destroy();
+
+    return res.status(200).json({
+      status: 'success',
+      message: `User ${user.name} deleted successfully.`,
+    });
   } catch (error) {
     console.error('Error deleting user:', error);
     res.status(500).json({ status: 'error', message: 'Internal server error.' });
+  }
+};
+
+export const subscribeUser = async (req, res) => {
+  const { userId, subscriptionPlanId } = req.body;
+
+  if (!userId || !subscriptionPlanId) {
+    return res.status(400).json({ status: 'error', message: 'userId and subscriptionPlanId are required.' });
+  }
+
+  try {
+    const user = await User.findByPk(userId);
+    if (!user) return res.status(404).json({ status: 'error', message: 'User not found.' });
+
+    const plan = await db.SubscriptionPlan.findByPk(subscriptionPlanId);
+    if (!plan) return res.status(404).json({ status: 'error', message: 'Subscription plan not found.' });
+
+    user.subscriptionPlanId = subscriptionPlanId;
+    await user.save();
+
+    const response = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      companyId: user.companyId,
+      subscriptionPlanId: user.subscriptionPlanId,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    };
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'User subscribed to plan successfully.',
+      data: response,
+    });
+  } catch (err) {
+    console.error('Error subscribing user:', err);
+    return res.status(500).json({ status: 'error', message: 'Internal server error.' });
+  }
+};
+
+export const unsubscribeUser = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const user = await db.User.findByPk(id);
+    if (!user) return res.status(404).json({ status: 'error', message: 'User not found.' });
+
+    user.subscriptionPlanId = null;
+    await user.save();
+
+    const response = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      companyId: user.companyId,
+      subscriptionPlanId: user.subscriptionPlanId,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    };
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'User unsubscribed successfully.',
+      data: response,
+    });
+  } catch (err) {
+    console.error('Error unsubscribing user:', err);
+    return res.status(500).json({ status: 'error', message: 'Internal server error.' });
   }
 };

@@ -3,7 +3,7 @@ import { Model, DataTypes } from 'sequelize';
 class RolePermission extends Model {
   static init(sequelize) {
     return super.init({
-      role_id: {
+      roleId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true,
@@ -13,7 +13,7 @@ class RolePermission extends Model {
         },
         onDelete: 'CASCADE',
       },
-      permission_id: {
+      permissionId: {
         type: DataTypes.JSON,
         allowNull: false,
         primaryKey: true,

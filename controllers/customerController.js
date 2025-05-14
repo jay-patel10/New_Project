@@ -38,14 +38,16 @@ export const createCustomer = async (req, res) => {
       leadSource,
     });
 
-    return res.status(201).json(customer);
+    return res.status(201).json({
+      message: `New customer ${customer.customerName} created successfully.`
+    });
   } catch (error) {
     console.error('Error creating customer:', error);
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
 
-// Get all customers (paginated)
+// Get all customers (paginated, include ID and all fields)
 export const getAllCustomers = async (req, res) => {
   try {
     const { page = 1, limit = 10 } = req.body;
@@ -54,13 +56,11 @@ export const getAllCustomers = async (req, res) => {
     const { count, rows } = await Customer.findAndCountAll({
       offset,
       limit,
-      order: [['createdAt', 'DESC']],
+      order: [['createdAt', 'ASC']],
     });
 
     return res.status(200).json({
       page: parseInt(page),
-      limit: parseInt(limit),
-      total: count,
       totalPages: Math.ceil(count / limit),
       data: rows,
     });
@@ -70,12 +70,12 @@ export const getAllCustomers = async (req, res) => {
   }
 };
 
-// Get customer by ID
+// Get customer by ID (include all fields)
 export const getCustomerById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const customer = await Customer.findByPk(id);
+    const customer = await Customer.findByPk(id); // No attributes config — includes all fields
 
     if (!customer) {
       return res.status(404).json({ message: 'Customer not found' });
@@ -88,7 +88,7 @@ export const getCustomerById = async (req, res) => {
   }
 };
 
-// Update a customer
+// Update a customer (include all fields in response)
 export const updateCustomer = async (req, res) => {
   try {
     const { id } = req.params;
@@ -101,7 +101,10 @@ export const updateCustomer = async (req, res) => {
 
     await customer.update(req.body);
 
-    return res.status(200).json({ message: 'Customer updated', customer });
+    return res.status(200).json({
+      message: 'Customer updated successfully.',
+      data: customer, // Includes all fields, including id
+    });
   } catch (error) {
     console.error('Error updating customer:', error);
     return res.status(500).json({ message: 'Internal server error' });
@@ -121,7 +124,7 @@ export const deleteCustomer = async (req, res) => {
 
     await customer.destroy();
 
-    return res.status(200).json({ message: 'Customer deleted' });
+    return res.status(200).json({ message: `Customer ${customer.customerName} deleted `});
   } catch (error) {
     console.error('Error deleting customer:', error);
     return res.status(500).json({ message: 'Internal server error' });

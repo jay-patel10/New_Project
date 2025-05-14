@@ -50,8 +50,18 @@ export const up = async (queryInterface, Sequelize) => {
     },
     companyId: {
       type: Sequelize.INTEGER,
-      allowNull: true, // FK not enforced here
-      // references block intentionally omitted
+      allowNull: true,
+      // references intentionally omitted as noted
+    },
+    subscriptionPlanId: {
+      type: Sequelize.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'subscription_plans',
+        key: 'id',
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'SET NULL',
     },
     createdAt: {
       type: Sequelize.DATE,

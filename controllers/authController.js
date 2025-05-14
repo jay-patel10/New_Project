@@ -176,6 +176,10 @@ export const verifyOtp = async (req, res) => {
       return res.status(400).json({ message: 'Invalid or expired OTP' });
     }
 
+    // Clear OTP and expiration after successful match
+    user.otp = null;
+    user.otpExpiresAt = null;
+
     // Get all user permissions
     const userPermissions = await UserPermission.findAll({
       where: { userId: user.id },
