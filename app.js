@@ -13,7 +13,8 @@ import userRoutes from './routes/userRoutes.js';
 import companyRoutes from './routes/companyRoutes.js';
 import customerRoutes from './routes/customerRoutes.js';
 import statusMasterRoutes from './routes/statusMasterRoutes.js';
-import subscriptionPlansRoutes from './routes/subscriptionPlanRoutes.js'; 
+import subscriptionPlansRoutes from './routes/subscriptionPlanRoutes.js';
+import assetManagementRoutes from './routes/assetManagementRoutes.js';
 
 dotenv.config();
 const app = express();
@@ -34,6 +35,7 @@ app.use('/api/companies', companyRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/status-masters', statusMasterRoutes);
 app.use('/api/subscription-plans', subscriptionPlansRoutes);
+app.use('/api/asset-management', assetManagementRoutes);
 
 // Root Route
 app.get('/', (req, res) => {

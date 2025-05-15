@@ -56,10 +56,6 @@ export const up = async (queryInterface, Sequelize) => {
     subscriptionPlanId: {
       type: Sequelize.INTEGER,
       allowNull: true,
-      references: {
-        model: 'subscription_plans',
-        key: 'id',
-      },
       onUpdate: 'CASCADE',
       onDelete: 'SET NULL',
     },
