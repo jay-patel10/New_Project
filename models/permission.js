@@ -1,4 +1,4 @@
-import { Model, DataTypes } from 'sequelize';
+import { Model, DataTypes } from 'sequelize'
 
 class Permission extends Model {
   static init(sequelize) {
@@ -7,25 +7,25 @@ class Permission extends Model {
         id: {
           type: DataTypes.INTEGER,
           autoIncrement: true,
-          primaryKey: true,
+          primaryKey: true
         },
         name: {
           type: DataTypes.STRING(255),
           allowNull: false,
-          unique: true,
+          unique: true
         },
         status: {
           type: DataTypes.BOOLEAN,
-          defaultValue: true,
+          defaultValue: true
         },
         createdBy: {
           type: DataTypes.STRING(255),
-          allowNull: false,
+          allowNull: false
         },
         updatedBy: {
           type: DataTypes.STRING(255),
-          allowNull: true,
-        },
+          allowNull: true
+        }
       },
       {
         sequelize,
@@ -33,10 +33,10 @@ class Permission extends Model {
         tableName: 'permissions',
         timestamps: true,
         createdAt: 'createdAt',
-        updatedAt: 'updatedAt',
+        updatedAt: 'updatedAt'
       }
-    );
+    )
   }
 }
 
-export default Permission;
+export default Permission

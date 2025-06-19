@@ -1,55 +1,85 @@
 // app.js
-import express from 'express';
-import dotenv from 'dotenv';
-import swaggerUi from 'swagger-ui-express';
-import verifyToken from './middlewares/verifyToken.js';
-import swaggerSpec from './config/swagger.js';
-import authRoutes from './routes/authRoutes.js';
-import roleRoutes from './routes/roleRoutes.js';
-import permissionRoutes from './routes/permissionRoutes.js'
-import rolePermissionRoutes from './routes/rolePermissionRoutes.js';
-import userPermissionRoutes from './routes/userPermissionRoutes.js';
-import userRoutes from './routes/userRoutes.js';
-import companyRoutes from './routes/companyRoutes.js';
-import customerRoutes from './routes/customerRoutes.js';
-import statusMasterRoutes from './routes/statusMasterRoutes.js';
-import subscriptionPlansRoutes from './routes/subscriptionPlanRoutes.js';
-import assetManagementRoutes from './routes/assetManagementRoutes.js';
+import express from 'express'
+import dotenv from 'dotenv'
+import swaggerUi from 'swagger-ui-express'
+import swaggerSpec from './config/swagger.js'
+import cors from 'cors'
+import { createServer } from 'http'
+import { Server } from 'socket.io'
+import db from './models/index.js'
+import apiRoutes from './routes/index.js'
 
-dotenv.config();
-const app = express();
+dotenv.config()
+const app = express()
+const server = createServer(app)
 
-app.use(express.json());
+const io = new Server(server, {
+  cors: {
+    origin: '*', // adjust in production
+    methods: ['GET', 'POST']
+  }
+})
 
-// Swagger documentation route
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use(cors())
+app.use(express.json())
 
-// Auth Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/roles',roleRoutes);
-app.use('/api/permissions',permissionRoutes)
-app.use('/api/role-permissions' ,rolePermissionRoutes)
-app.use('/api/user-permissions' ,userPermissionRoutes)
-app.use('/api/users', userRoutes)
-app.use('/api/companies', companyRoutes);
-app.use('/api/customers', customerRoutes);
-app.use('/api/status-masters', statusMasterRoutes);
-app.use('/api/subscription-plans', subscriptionPlansRoutes);
-app.use('/api/asset-management', assetManagementRoutes);
+// Swagger documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+
+// Register all v1 routes here
+app.use('/api', apiRoutes)
 
 // Root Route
 app.get('/', (req, res) => {
-  res.send('Welcome to the Authentication API!');
-});
+  res.send('Welcome to the Authentication API!')
+})
 
 // 404 handler
 app.use((req, res) => {
-  res.status(404).json({ error: 'Route not found' });
-});
+  res.status(404).json({ error: 'Route not found' })
+})
 
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-  console.log(`Swagger docs at http://localhost:${PORT}/api-docs`);
-  console.log(new Date());
-});
+// --- SOCKET.IO LOGIC ---
+io.on('connection', (socket) => {
+  console.log(`User connected: ${socket.id}`)
+
+  socket.on('join', (userId) => {
+    socket.join(userId.toString())
+    console.log(`User ${userId} joined their room.`)
+  })
+
+  socket.on('send_message', async (data) => {
+    const { senderId, recipientId, message } = data
+
+    try {
+      // Save message to DB
+      await db.Chat.create({
+        user_id: senderId,
+        recipient_id: recipientId,
+        message
+      })
+
+      // Emit to recipient
+      io.to(recipientId.toString()).emit('receive_message', {
+        senderId,
+        message
+      })
+    } catch (error) {
+      console.error('Error saving chat:', error)
+    }
+  })
+
+  socket.on('disconnect', () => {
+    console.log(`User disconnected: ${socket.id}`)
+  })
+})
+
+const PORT = process.env.PORT || 4000
+server.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`)
+  console.log(`Swagger docs at http://localhost:${PORT}/api-docs`)
+  console.log(new Date())
+})
+
+// Optional: export io if needed elsewhere
+export { io }

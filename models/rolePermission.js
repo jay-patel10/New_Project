@@ -1,4 +1,4 @@
-import { Model, DataTypes } from 'sequelize';
+import { Model, DataTypes } from 'sequelize'
 
 class RolePermission extends Model {
   static init(sequelize) {
@@ -9,22 +9,22 @@ class RolePermission extends Model {
         primaryKey: true,
         references: {
           model: 'roles', // ✅ table name
-          key: 'id',
+          key: 'id'
         },
-        onDelete: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       permissionId: {
         type: DataTypes.JSON,
         allowNull: false,
-        primaryKey: true,
-      },
+        primaryKey: true
+      }
     }, {
       sequelize,
       modelName: 'RolePermission',
       tableName: 'role_permissions',
-      timestamps: false,
-    });
+      timestamps: false
+    })
   }
 }
 
-export default RolePermission;
+export default RolePermission

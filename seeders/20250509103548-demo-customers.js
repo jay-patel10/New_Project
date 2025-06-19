@@ -1,6 +1,6 @@
-'use strict';
+'use strict'
 
-export async function up(queryInterface, Sequelize) {
+export async function up(queryInterface) {
   await queryInterface.bulkInsert('customers', [
     {
       customerName: 'Alice Johnson',
@@ -16,7 +16,7 @@ export async function up(queryInterface, Sequelize) {
       organization: 'ABC Corp',
       leadSource: 'LinkedIn',
       createdAt: new Date(),
-      updatedAt: new Date(),
+      updatedAt: new Date()
     },
     {
       customerName: 'Raj Patel',
@@ -32,7 +32,7 @@ export async function up(queryInterface, Sequelize) {
       organization: 'Patel Tech',
       leadSource: 'Referral',
       createdAt: new Date(),
-      updatedAt: new Date(),
+      updatedAt: new Date()
     },
     {
       customerName: 'Emily Zhang',
@@ -48,11 +48,11 @@ export async function up(queryInterface, Sequelize) {
       organization: 'Zhang Solutions',
       leadSource: 'Website',
       createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-  ]);
+      updatedAt: new Date()
+    }
+  ])
 }
 
-export async function down(queryInterface, Sequelize) {
-  await queryInterface.bulkDelete('customers', null, {});
+export async function down(queryInterface) {
+  await queryInterface.bulkDelete('customers', null, {})
 }

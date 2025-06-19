@@ -1,13 +1,13 @@
-import express from 'express';
+import express from 'express'
 import {
   createCompany,
   getCompanyById,
   updateCompany,
   deleteCompany,
-  getAllCompanies,
-} from '../controllers/companyController.js';
+  getAllCompanies
+} from '../controllers/companyController.js'
 
-const router = express.Router();
+const router = express.Router()
 
 /**
  * @swagger
@@ -50,8 +50,7 @@ const router = express.Router();
  *       400:
  *         description: Bad request
  */
-router.post('/', createCompany);
-
+router.post('/', createCompany)
 
 /**
  * @swagger
@@ -93,7 +92,7 @@ router.post('/', createCompany);
  *                   items:
  *                     $ref: '#/components/schemas/Company'
  */
-router.post('/getAllCompanies', getAllCompanies);
+router.post('/getAllCompanies', getAllCompanies)
 
 /**
  * @swagger
@@ -113,7 +112,7 @@ router.post('/getAllCompanies', getAllCompanies);
  *       404:
  *         description: Company not found
  */
-router.get('/:id', getCompanyById);
+router.get('/:id', getCompanyById)
 
 /**
  * @swagger
@@ -152,7 +151,7 @@ router.get('/:id', getCompanyById);
  *       404:
  *         description: Company not found
  */
-router.put('/:id', updateCompany);
+router.put('/:id', updateCompany)
 
 /**
  * @swagger
@@ -172,6 +171,6 @@ router.put('/:id', updateCompany);
  *       404:
  *         description: Company not found
  */
-router.delete('/:id', deleteCompany);
+router.delete('/:id', deleteCompany)
 
-export default router;
+export default router

@@ -1,4 +1,4 @@
-import { Model, DataTypes } from 'sequelize';
+import { Model, DataTypes } from 'sequelize'
 
 class Company extends Model {
   static init(sequelize) {
@@ -6,36 +6,36 @@ class Company extends Model {
       {
         companyName: {
           type: DataTypes.STRING,
-          allowNull: false,
+          allowNull: false
         },
         companyAddress: {
-          type: DataTypes.STRING,
+          type: DataTypes.STRING
         },
         city: {
-          type: DataTypes.STRING,
+          type: DataTypes.STRING
         },
         state: {
-          type: DataTypes.STRING,
+          type: DataTypes.STRING
         },
         country: {
-          type: DataTypes.STRING,
+          type: DataTypes.STRING
         },
         taxNumber: {
-          type: DataTypes.STRING,
+          type: DataTypes.STRING
         },
         status: {
           type: DataTypes.STRING,
-          defaultValue: 'active',
-        },
+          defaultValue: 'active'
+        }
       },
       {
         sequelize,
         modelName: 'Company',
         tableName: 'companies',
-        timestamps: true,
+        timestamps: true
       }
-    );
+    )
   }
 }
 
-export default Company;
+export default Company

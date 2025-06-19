@@ -1,13 +1,13 @@
-import express from 'express';
+import express from 'express'
 import {
   createSubscriptionPlan,
   getAllSubscriptionPlans,
   getSubscriptionPlanById,
   updateSubscriptionPlan,
-  deleteSubscriptionPlan,
-} from '../controllers/subscriptionPlanController.js';
+  deleteSubscriptionPlan
+} from '../controllers/subscriptionPlanController.js'
 
-const router = express.Router();
+const router = express.Router()
 
 /**
  * @swagger
@@ -59,7 +59,7 @@ const router = express.Router();
  *       500:
  *         description: Internal server error
  */
-router.post('/', createSubscriptionPlan);
+router.post('/', createSubscriptionPlan)
 
 /**
  * @swagger
@@ -91,7 +91,7 @@ router.post('/', createSubscriptionPlan);
  *       500:
  *         description: Internal server error
  */
-router.post('/get-subscription-plans', getAllSubscriptionPlans);
+router.post('/get-subscription-plans', getAllSubscriptionPlans)
 
 /**
  * @swagger
@@ -117,7 +117,7 @@ router.post('/get-subscription-plans', getAllSubscriptionPlans);
  *       500:
  *         description: Internal server error
  */
-router.get('/:id', getSubscriptionPlanById);
+router.get('/:id', getSubscriptionPlanById)
 
 /**
  * @swagger
@@ -166,7 +166,7 @@ router.get('/:id', getSubscriptionPlanById);
  *       500:
  *         description: Internal server error
  */
-router.put('/:id', updateSubscriptionPlan);
+router.put('/:id', updateSubscriptionPlan)
 
 /**
  * @swagger
@@ -192,6 +192,6 @@ router.put('/:id', updateSubscriptionPlan);
  *       500:
  *         description: Internal server error
  */
-router.delete('/:id', deleteSubscriptionPlan);
+router.delete('/:id', deleteSubscriptionPlan)
 
-export default router;
+export default router

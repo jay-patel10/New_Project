@@ -3,11 +3,11 @@ export const up = async (queryInterface, Sequelize) => {
     id: {
       type: Sequelize.INTEGER,
       autoIncrement: true,
-      primaryKey: true,
+      primaryKey: true
     },
     companyName: {
       type: Sequelize.STRING,
-      allowNull: false,
+      allowNull: false
     },
     companyAddress: Sequelize.STRING,
     city: Sequelize.STRING,
@@ -16,19 +16,19 @@ export const up = async (queryInterface, Sequelize) => {
     taxNumber: Sequelize.STRING,
     status: {
       type: Sequelize.STRING,
-      defaultValue: 'active',
+      defaultValue: 'active'
     },
     createdAt: {
       type: Sequelize.DATE,
-      defaultValue: Sequelize.fn('NOW'),
+      defaultValue: Sequelize.fn('NOW')
     },
     updatedAt: {
       type: Sequelize.DATE,
-      defaultValue: Sequelize.fn('NOW'),
-    },
-  });
-};
+      defaultValue: Sequelize.fn('NOW')
+    }
+  })
+}
 
 export const down = async (queryInterface) => {
-  await queryInterface.dropTable('companies');
-};
+  await queryInterface.dropTable('companies')
+}

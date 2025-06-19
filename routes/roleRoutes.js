@@ -1,13 +1,13 @@
-import express from 'express';
+import express from 'express'
 import {
   createRole,
   getAllRoles,
   getRoleById,
   updateRole,
-  deleteRole,
-} from '../controllers/roleController.js';
+  deleteRole
+} from '../controllers/roleController.js'
 
-const router = express.Router();
+const router = express.Router()
 
 /**
  * @swagger
@@ -41,7 +41,7 @@ const router = express.Router();
  *       400:
  *         description: Bad request
  */
-router.post('/', createRole);
+router.post('/', createRole)
 /**
  * @swagger
  * /api/roles/getAllRoles:
@@ -84,7 +84,7 @@ router.post('/', createRole);
  *                   items:
  *                     $ref: '#/components/schemas/Role'
  */
-router.post('/getAllRoles', getAllRoles);
+router.post('/getAllRoles', getAllRoles)
 
 /**
  * @swagger
@@ -104,7 +104,7 @@ router.post('/getAllRoles', getAllRoles);
  *       404:
  *         description: Role not found
  */
-router.get('/:id', getRoleById);
+router.get('/:id', getRoleById)
 
 /**
  * @swagger
@@ -135,7 +135,7 @@ router.get('/:id', getRoleById);
  *       404:
  *         description: Role not found
  */
-router.put('/:id', updateRole);
+router.put('/:id', updateRole)
 
 /**
  * @swagger
@@ -155,6 +155,6 @@ router.put('/:id', updateRole);
  *       404:
  *         description: Role not found
  */
-router.delete('/:id', deleteRole);
+router.delete('/:id', deleteRole)
 
-export default router;
+export default router

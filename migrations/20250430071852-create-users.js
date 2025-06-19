@@ -1,77 +1,77 @@
-'use strict';
+'use strict'
 
 export const up = async (queryInterface, Sequelize) => {
   await queryInterface.createTable('users', {
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
-      autoIncrement: true,
+      autoIncrement: true
     },
     name: {
       type: Sequelize.STRING(100),
-      allowNull: false,
+      allowNull: false
     },
     email: {
       type: Sequelize.STRING(150),
       unique: true,
-      allowNull: false,
+      allowNull: false
     },
     password: {
       type: Sequelize.STRING(255),
-      allowNull: false,
+      allowNull: false
     },
     otp: {
       type: Sequelize.STRING(10),
-      allowNull: true,
+      allowNull: true
     },
     otpExpiresAt: {
       type: Sequelize.DATE,
-      allowNull: true,
+      allowNull: true
     },
     verificationToken: {
       type: Sequelize.STRING(255),
-      allowNull: true,
+      allowNull: true
     },
     verificationDeadline: {
       type: Sequelize.DATE,
-      allowNull: true,
+      allowNull: true
     },
     isVerified: {
       type: Sequelize.BOOLEAN,
-      defaultValue: false,
+      defaultValue: false
     },
     loginToken: {
       type: Sequelize.TEXT,
-      allowNull: true,
+      allowNull: true
     },
     loginTokenExpiresAt: {
       type: Sequelize.DATE,
-      allowNull: true,
+      allowNull: true
     },
     companyId: {
       type: Sequelize.INTEGER,
-      allowNull: true,
+      allowNull: true
       // references intentionally omitted as noted
     },
     subscriptionPlanId: {
       type: Sequelize.INTEGER,
       allowNull: true,
       onUpdate: 'CASCADE',
-      onDelete: 'SET NULL',
+      onDelete: 'SET NULL'
     },
     createdAt: {
       type: Sequelize.DATE,
       allowNull: false,
-      defaultValue: Sequelize.NOW,
+      defaultValue: Sequelize.NOW
     },
     updatedAt: {
       type: Sequelize.DATE,
       allowNull: false,
-      defaultValue: Sequelize.NOW,
-    },
-  });
-};
+      defaultValue: Sequelize.NOW
+    }
+  })
+}
 
-export const down = async (queryInterface, Sequelize) => {
-  await queryInterface.dropTable('users');
-};
+export const down = async (queryInterface) => {
+  await queryInterface.dropTable('users')
+}

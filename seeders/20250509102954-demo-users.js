@@ -1,11 +1,16 @@
-'use strict';
+'use strict'
 
-export async function up(queryInterface, Sequelize) {
+import bcrypt from 'bcrypt'
+
+export async function up(queryInterface) {
+  const hashedPassword1 = await bcrypt.hash('123', 10)
+  const hashedPassword2 = await bcrypt.hash('123', 10)
+
   await queryInterface.bulkInsert('users', [
     {
       name: 'Alice Smith',
       email: 'alice@example.com',
-      password: 'hashed_password_1',
+      password: hashedPassword1,
       isVerified: true,
       createdAt: new Date(),
       updatedAt: new Date()
@@ -13,14 +18,14 @@ export async function up(queryInterface, Sequelize) {
     {
       name: 'Bob Johnson',
       email: 'bob@example.com',
-      password: 'hashed_password_2',
+      password: hashedPassword2,
       isVerified: false,
       createdAt: new Date(),
       updatedAt: new Date()
     }
-  ], {});
+  ], {})
 }
 
-export async function down(queryInterface, Sequelize) {
-  await queryInterface.bulkDelete('users', null, {});
+export async function down(queryInterface) {
+  await queryInterface.bulkDelete('users', null, {})
 }

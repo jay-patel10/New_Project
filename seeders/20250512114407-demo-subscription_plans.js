@@ -1,6 +1,6 @@
-'use strict';
+'use strict'
 
-export async function up(queryInterface, Sequelize) {
+export async function up(queryInterface) {
   await queryInterface.bulkInsert('subscription_plans', [
     {
       name: 'Basic Plan',
@@ -9,7 +9,7 @@ export async function up(queryInterface, Sequelize) {
       description: 'Basic monthly subscription plan',
       isActive: true,
       createdAt: new Date(),
-      updatedAt: new Date(),
+      updatedAt: new Date()
     },
     {
       name: 'Pro Plan',
@@ -18,7 +18,7 @@ export async function up(queryInterface, Sequelize) {
       description: 'Quarterly subscription with more features',
       isActive: true,
       createdAt: new Date(),
-      updatedAt: new Date(),
+      updatedAt: new Date()
     },
     {
       name: 'Enterprise Plan',
@@ -27,11 +27,11 @@ export async function up(queryInterface, Sequelize) {
       description: 'Annual subscription for businesses',
       isActive: false,
       createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-  ]);
+      updatedAt: new Date()
+    }
+  ])
 }
 
-export async function down(queryInterface, Sequelize) {
-  await queryInterface.bulkDelete('subscription_plans', null, {});
+export async function down(queryInterface) {
+  await queryInterface.bulkDelete('subscription_plans', null, {})
 }

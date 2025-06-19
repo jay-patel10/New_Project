@@ -1,13 +1,13 @@
-import express from 'express';
+import express from 'express'
 import {
   createStatusMaster,
   getStatusMasterById,
   updateStatusMaster,
   deleteStatusMaster,
-  getAllStatusMasters,
-} from '../controllers/statusMasterController.js';
+  getAllStatusMasters
+} from '../controllers/statusMasterController.js'
 
-const router = express.Router();
+const router = express.Router()
 
 /**
  * @swagger
@@ -42,7 +42,7 @@ const router = express.Router();
  *       400:
  *         description: Bad request
  */
-router.post('/', createStatusMaster);
+router.post('/', createStatusMaster)
 
 /**
  * @swagger
@@ -84,7 +84,7 @@ router.post('/', createStatusMaster);
  *                   items:
  *                     $ref: '#/components/schemas/StatusMaster'
  */
-router.post('/getAllStatusMasters', getAllStatusMasters);
+router.post('/getAllStatusMasters', getAllStatusMasters)
 
 /**
  * @swagger
@@ -104,7 +104,7 @@ router.post('/getAllStatusMasters', getAllStatusMasters);
  *       404:
  *         description: Status Master not found
  */
-router.get('/:id', getStatusMasterById);
+router.get('/:id', getStatusMasterById)
 
 /**
  * @swagger
@@ -135,7 +135,7 @@ router.get('/:id', getStatusMasterById);
  *       404:
  *         description: Status Master not found
  */
-router.put('/:id', updateStatusMaster);
+router.put('/:id', updateStatusMaster)
 
 /**
  * @swagger
@@ -155,6 +155,6 @@ router.put('/:id', updateStatusMaster);
  *       404:
  *         description: Status Master not found
  */
-router.delete('/:id', deleteStatusMaster);
+router.delete('/:id', deleteStatusMaster)
 
-export default router;
+export default router

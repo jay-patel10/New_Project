@@ -1,5 +1,5 @@
 // config/swagger.js
-import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerJSDoc from 'swagger-jsdoc'
 
 const options = {
   definition: {
@@ -7,30 +7,30 @@ const options = {
     info: {
       title: 'Auth API',
       version: '1.0.0',
-      description: 'API for user authentication and OTP verification',
+      description: 'API for user authentication and OTP verification'
     },
     servers: [
       {
-        url: 'http://localhost:4000',
-      },
+        url: 'http://localhost:4000'
+      }
     ],
     components: {
       securitySchemes: {
         bearerAuth: {
           type: 'http',
           scheme: 'bearer',
-          bearerFormat: 'JWT',
-        },
-      },
+          bearerFormat: 'JWT'
+        }
+      }
     },
     security: [
       {
-        bearerAuth: [],
-      },
-    ],
+        bearerAuth: []
+      }
+    ]
   },
-  apis: ['./routes/*.js'], // path to your route files
-};
+  apis: ['./routes/*.js'] // path to your route files
+}
 
-const swaggerSpec = swaggerJSDoc(options);
-export default swaggerSpec;
+const swaggerSpec = swaggerJSDoc(options)
+export default swaggerSpec

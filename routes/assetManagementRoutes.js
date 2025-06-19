@@ -1,13 +1,13 @@
-import express from 'express';
+import express from 'express'
 import {
   createAsset,
   getAllAssets,
   getAssetById,
   updateAsset,
-  deleteAsset,
-} from '../controllers/assetManagementController.js';
+  deleteAsset
+} from '../controllers/assetManagementController.js'
 
-const router = express.Router();
+const router = express.Router()
 
 /**
  * @swagger
@@ -70,7 +70,7 @@ const router = express.Router();
  *       500:
  *         description: Internal server error
  */
-router.post('/', createAsset);
+router.post('/', createAsset)
 
 /**
  * @swagger
@@ -112,7 +112,7 @@ router.post('/', createAsset);
  *                   items:
  *                     $ref: '#/components/schemas/AssetManagement'
  */
-router.post('/getAllAssets', getAllAssets);
+router.post('/getAllAssets', getAllAssets)
 
 /**
  * @swagger
@@ -138,7 +138,7 @@ router.post('/getAllAssets', getAllAssets);
  *       500:
  *         description: Internal server error
  */
-router.get('/:id', getAssetById);
+router.get('/:id', getAssetById)
 
 /**
  * @swagger
@@ -206,7 +206,7 @@ router.get('/:id', getAssetById);
  *       500:
  *         description: Internal server error
  */
-router.put('/:id', updateAsset);
+router.put('/:id', updateAsset)
 
 /**
  * @swagger
@@ -232,6 +232,6 @@ router.put('/:id', updateAsset);
  *       500:
  *         description: Internal server error
  */
-router.delete('/:id', deleteAsset);
+router.delete('/:id', deleteAsset)
 
-export default router;
+export default router

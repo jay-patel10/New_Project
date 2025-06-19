@@ -1,4 +1,4 @@
-import { Model, DataTypes } from 'sequelize';
+import { Model, DataTypes } from 'sequelize'
 
 class Role extends Model {
   static init(sequelize) {
@@ -7,25 +7,25 @@ class Role extends Model {
         id: {
           type: DataTypes.INTEGER,
           autoIncrement: true,
-          primaryKey: true,
+          primaryKey: true
         },
         role: {
           type: DataTypes.STRING(255),
-          allowNull: false,
+          allowNull: false
         },
         status: {
           type: DataTypes.BOOLEAN,
-          defaultValue: true,
-        },
+          defaultValue: true
+        }
       },
       {
         sequelize,
         modelName: 'Role',
         tableName: 'roles',
-        timestamps: true,
+        timestamps: true
       }
-    );
+    )
   }
 }
 
-export default Role;
+export default Role

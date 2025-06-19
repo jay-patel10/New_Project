@@ -1,4 +1,4 @@
-import express from 'express';
+import express from 'express'
 import {
   registerUser,
   verifyEmail,
@@ -7,10 +7,10 @@ import {
   forgotPassword,
   resetPassword,
   verifyForgotPasswordToken,
-  logoutUser,
-} from '../controllers/authController.js';
+  logoutUser
+} from '../controllers/authController.js'
 
-const router = express.Router();
+const router = express.Router()
 
 /**
  * @swagger
@@ -46,7 +46,7 @@ const router = express.Router();
  *       201:
  *         description: User registered successfully
  */
-router.post('/register', registerUser);
+router.post('/register', registerUser)
 
 /**
  * @swagger
@@ -69,7 +69,7 @@ router.post('/register', registerUser);
  *       200:
  *         description: Email verified successfully
  */
-router.post('/verify-email', verifyEmail);
+router.post('/verify-email', verifyEmail)
 
 /**
  * @swagger
@@ -95,7 +95,7 @@ router.post('/verify-email', verifyEmail);
  *       200:
  *         description: Login successful
  */
-router.post('/login', loginUser);
+router.post('/login', loginUser)
 
 /**
  * @swagger
@@ -121,7 +121,7 @@ router.post('/login', loginUser);
  *       200:
  *         description: OTP verified
  */
-router.post('/verify-otp', verifyOtp);
+router.post('/verify-otp', verifyOtp)
 
 /**
  * @swagger
@@ -144,7 +144,7 @@ router.post('/verify-otp', verifyOtp);
  *       200:
  *         description: Password reset link sent
  */
-router.post('/forgot-password', forgotPassword);
+router.post('/forgot-password', forgotPassword)
 
 /**
  * @swagger
@@ -177,7 +177,7 @@ router.post('/forgot-password', forgotPassword);
  *       500:
  *         description: Server error
  */
-router.post('/verify-forgot-password', verifyForgotPasswordToken);
+router.post('/verify-forgot-password', verifyForgotPasswordToken)
 
 /**
  * @swagger
@@ -212,7 +212,7 @@ router.post('/verify-forgot-password', verifyForgotPasswordToken);
  *       400:
  *         description: Validation errors
  */
-router.post('/reset-password', resetPassword);
+router.post('/reset-password', resetPassword)
 
 /**
  * @swagger
@@ -224,6 +224,6 @@ router.post('/reset-password', resetPassword);
  *       200:
  *         description: Logout successful
  */
-router.post('/logout', logoutUser);
+router.post('/logout', logoutUser)
 
-export default router;
+export default router

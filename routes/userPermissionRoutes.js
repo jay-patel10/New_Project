@@ -1,7 +1,7 @@
-import express from 'express';
-import { assignPermissionsToUser, removePermissionsFromUser } from '../controllers/userPermissionController.js';
+import express from 'express'
+import { assignPermissionsToUser, removePermissionsFromUser } from '../controllers/userPermissionController.js'
 
-const router = express.Router();
+const router = express.Router()
 
 /**
  * @swagger
@@ -40,7 +40,7 @@ const router = express.Router();
  *       500:
  *         description: Internal server error
  */
-router.post('/assign', assignPermissionsToUser);
+router.post('/assign', assignPermissionsToUser)
 
 /**
  * @swagger
@@ -79,6 +79,6 @@ router.post('/assign', assignPermissionsToUser);
  *       500:
  *         description: Internal server error
  */
-router.post('/remove', removePermissionsFromUser);
+router.post('/remove', removePermissionsFromUser)
 
-export default router;
+export default router

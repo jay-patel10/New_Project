@@ -1,4 +1,4 @@
-import { Model, DataTypes } from 'sequelize';
+import { Model, DataTypes } from 'sequelize'
 
 class SubscriptionPlan extends Model {
   static init(sequelize) {
@@ -6,38 +6,38 @@ class SubscriptionPlan extends Model {
       {
         name: {
           type: DataTypes.STRING(100),
-          allowNull: false,
+          allowNull: false
         },
         price: {
           type: DataTypes.DECIMAL(10, 2),
-          allowNull: false,
+          allowNull: false
         },
         durationInDays: {
           type: DataTypes.INTEGER,
-          allowNull: false,
+          allowNull: false
         },
         description: {
           type: DataTypes.TEXT,
-          allowNull: true,
+          allowNull: true
         },
         isActive: {
           type: DataTypes.BOOLEAN,
           allowNull: false,
-          defaultValue: true,
+          defaultValue: true
         },
         features: {
           type: DataTypes.JSON,
-          allowNull: true,
-        },
+          allowNull: true
+        }
       },
       {
         sequelize,
         modelName: 'SubscriptionPlan',
         tableName: 'subscription_plans',
-        timestamps: true,
+        timestamps: true
       }
-    );
+    )
   }
 }
 
-export default SubscriptionPlan;
+export default SubscriptionPlan

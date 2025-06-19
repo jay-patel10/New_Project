@@ -1,4 +1,4 @@
-import { Model, DataTypes } from 'sequelize';
+import { Model, DataTypes } from 'sequelize'
 
 class User extends Model {
   static init(sequelize) {
@@ -7,79 +7,79 @@ class User extends Model {
         id: {
           type: DataTypes.INTEGER,
           primaryKey: true,
-          autoIncrement: true,
+          autoIncrement: true
         },
         name: {
           type: DataTypes.STRING(100),
-          allowNull: false,
+          allowNull: false
         },
         email: {
           type: DataTypes.STRING(150),
           unique: true,
-          allowNull: false,
+          allowNull: false
         },
         password: {
           type: DataTypes.STRING(255),
-          allowNull: false,
+          allowNull: false
         },
         otp: {
           type: DataTypes.STRING(10),
-          allowNull: true,
+          allowNull: true
         },
         otpExpiresAt: {
           type: DataTypes.DATE,
-          allowNull: true,
+          allowNull: true
         },
         verificationToken: {
           type: DataTypes.STRING(255),
-          allowNull: true,
+          allowNull: true
         },
         verificationDeadline: {
           type: DataTypes.DATE,
-          allowNull: true,
+          allowNull: true
         },
         isVerified: {
           type: DataTypes.BOOLEAN,
-          defaultValue: false,
+          defaultValue: false
         },
         loginToken: {
           type: DataTypes.TEXT,
-          allowNull: true,
+          allowNull: true
         },
         loginTokenExpiresAt: {
           type: DataTypes.DATE,
-          allowNull: true,
+          allowNull: true
         },
         companyId: {
           type: DataTypes.INTEGER,
           allowNull: true,
           references: {
             model: 'Companies', // Reference to the 'Companies' table
-            key: 'id',
+            key: 'id'
           },
           onUpdate: 'CASCADE',
-          onDelete: 'SET NULL',
+          onDelete: 'SET NULL'
         },
         subscriptionPlanId: {
           type: DataTypes.INTEGER,
           allowNull: true,
           references: {
             model: 'subscription_plans', // Reference to the 'subscription_plans' table
-            key: 'id',
+            key: 'id'
           },
           onUpdate: 'CASCADE',
-          onDelete: 'SET NULL',
+          onDelete: 'SET NULL'
         },
         createdAt: {
           type: DataTypes.DATE,
           allowNull: false,
-          defaultValue: DataTypes.NOW,
+          defaultValue: DataTypes.NOW
         },
         updatedAt: {
           type: DataTypes.DATE,
           allowNull: false,
-          defaultValue: DataTypes.NOW,
-        },
+          defaultValue: DataTypes.NOW
+        }
       },
       {
         sequelize,
@@ -87,10 +87,10 @@ class User extends Model {
         tableName: 'users',
         timestamps: true,
         createdAt: 'createdAt',
-        updatedAt: 'updatedAt',
+        updatedAt: 'updatedAt'
       }
-    );
+    )
   }
 }
 
-export default User;
+export default User

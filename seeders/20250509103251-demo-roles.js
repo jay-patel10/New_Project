@@ -1,6 +1,6 @@
-'use strict';
+'use strict'
 
-export async function up(queryInterface, Sequelize) {
+export async function up(queryInterface) {
   await queryInterface.bulkInsert('roles', [
     {
       role: 'Admin',
@@ -20,9 +20,9 @@ export async function up(queryInterface, Sequelize) {
       createdAt: new Date(),
       updatedAt: new Date()
     }
-  ], {});
+  ], {})
 }
 
-export async function down(queryInterface, Sequelize) {
-  await queryInterface.bulkDelete('roles', null, {});
+export async function down(queryInterface) {
+  await queryInterface.bulkDelete('roles', null, {})
 }

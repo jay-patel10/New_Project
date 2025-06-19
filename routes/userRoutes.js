@@ -1,4 +1,4 @@
-import express from 'express';
+import express from 'express'
 import {
   createUser,
   getUserById,
@@ -6,10 +6,10 @@ import {
   deleteUser,
   getAllUsers,
   subscribeUser,
-  unsubscribeUser,
-} from '../controllers/userController.js';
+  unsubscribeUser
+} from '../controllers/userController.js'
 
-const router = express.Router();
+const router = express.Router()
 
 /**
  * @swagger
@@ -49,7 +49,7 @@ const router = express.Router();
  *       400:
  *         description: Bad request
  */
-router.post('/', createUser);
+router.post('/', createUser)
 
 /**
  * @swagger
@@ -74,7 +74,7 @@ router.post('/', createUser);
  *       200:
  *         description: Paginated list of users
  */
-router.post('/getAllUsers', getAllUsers);
+router.post('/getAllUsers', getAllUsers)
 
 /**
  * @swagger
@@ -94,7 +94,7 @@ router.post('/getAllUsers', getAllUsers);
  *       404:
  *         description: User not found
  */
-router.get('/:id', getUserById);
+router.get('/:id', getUserById)
 
 /**
  * @swagger
@@ -129,7 +129,7 @@ router.get('/:id', getUserById);
  *       404:
  *         description: User not found
  */
-router.put('/:id', updateUser);
+router.put('/:id', updateUser)
 
 /**
  * @swagger
@@ -149,7 +149,7 @@ router.put('/:id', updateUser);
  *       404:
  *         description: User not found
  */
-router.delete('/:id', deleteUser);
+router.delete('/:id', deleteUser)
 
 /**
  * @swagger
@@ -219,7 +219,7 @@ router.delete('/:id', deleteUser);
  *       500:
  *         description: Internal server error
  */
-router.post('/subscribe', subscribeUser);
+router.post('/subscribe', subscribeUser)
 
 /**
  * @swagger
@@ -239,6 +239,6 @@ router.post('/subscribe', subscribeUser);
  *       404:
  *         description: User not found
  */
-router.delete('/:id/unsubscribe', unsubscribeUser);
+router.delete('/:id/unsubscribe', unsubscribeUser)
 
-export default router;
+export default router

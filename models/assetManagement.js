@@ -1,4 +1,4 @@
-import { Model, DataTypes } from 'sequelize';
+import { Model, DataTypes } from 'sequelize'
 
 class AssetManagement extends Model {
   static init(sequelize) {
@@ -7,59 +7,59 @@ class AssetManagement extends Model {
         id: {
           type: DataTypes.INTEGER,
           autoIncrement: true,
-          primaryKey: true,
+          primaryKey: true
         },
         assetTag: {
           type: DataTypes.STRING(100),
           allowNull: false,
-          unique: true,
+          unique: true
         },
         serialNumber: {
           type: DataTypes.STRING(100),
-          allowNull: true,
+          allowNull: true
         },
         name: {
           type: DataTypes.STRING(100),
-          allowNull: false,
+          allowNull: false
         },
         description: {
           type: DataTypes.TEXT,
-          allowNull: true,
+          allowNull: true
         },
         category: {
           type: DataTypes.STRING(50),
-          allowNull: true,
+          allowNull: true
         },
         location: {
           type: DataTypes.STRING(100),
-          allowNull: true,
+          allowNull: true
         },
         status: {
           type: DataTypes.ENUM('available', 'assigned', 'in_repair', 'retired'),
           allowNull: false,
-          defaultValue: 'available',
+          defaultValue: 'available'
         },
         purchaseDate: {
           type: DataTypes.DATE,
-          allowNull: true,
+          allowNull: true
         },
         warrantyExpiry: {
           type: DataTypes.DATE,
-          allowNull: true,
+          allowNull: true
         },
         value: {
           type: DataTypes.FLOAT,
-          allowNull: true,
-        },
+          allowNull: true
+        }
       },
       {
         sequelize,
         modelName: 'AssetManagement',
         tableName: 'assets_management',
-        timestamps: true,
+        timestamps: true
       }
-    );
+    )
   }
 }
 
-export default AssetManagement;
+export default AssetManagement

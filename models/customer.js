@@ -1,4 +1,4 @@
-import { Model, DataTypes } from 'sequelize';
+import { Model, DataTypes } from 'sequelize'
 
 class Customer extends Model {
   static init(sequelize) {
@@ -6,54 +6,54 @@ class Customer extends Model {
       {
         customerName: {
           type: DataTypes.STRING,
-          allowNull: false,
+          allowNull: false
         },
         city: {
-          type: DataTypes.STRING,
+          type: DataTypes.STRING
         },
         state: {
-          type: DataTypes.STRING,
+          type: DataTypes.STRING
         },
         country: {
-          type: DataTypes.STRING,
+          type: DataTypes.STRING
         },
         pin: {
-          type: DataTypes.STRING,
+          type: DataTypes.STRING
         },
         social: {
-          type: DataTypes.STRING,
+          type: DataTypes.STRING
         },
         contact: {
-          type: DataTypes.STRING,
+          type: DataTypes.STRING
         },
         email: {
           type: DataTypes.STRING,
           validate: {
-            isEmail: true,
-          },
+            isEmail: true
+          }
         },
         status: {
           type: DataTypes.STRING,
-          defaultValue: 'active',
+          defaultValue: 'active'
         },
         description: {
-          type: DataTypes.TEXT,
+          type: DataTypes.TEXT
         },
         organization: {
-          type: DataTypes.STRING,
+          type: DataTypes.STRING
         },
         leadSource: {
-          type: DataTypes.STRING,
-        },
+          type: DataTypes.STRING
+        }
       },
       {
         sequelize,
         modelName: 'Customer',
         tableName: 'customers',
-        timestamps: true,
+        timestamps: true
       }
-    );
+    )
   }
 }
 
-export default Customer;
+export default Customer

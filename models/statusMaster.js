@@ -1,4 +1,4 @@
-import { Model, DataTypes } from 'sequelize';
+import { Model, DataTypes } from 'sequelize'
 
 class StatusMaster extends Model {
   static init(sequelize) {
@@ -6,21 +6,21 @@ class StatusMaster extends Model {
       {
         name: {
           type: DataTypes.STRING,
-          allowNull: false,
+          allowNull: false
         },
         status: {
           type: DataTypes.STRING,
-          defaultValue: 'active',
-        },
+          defaultValue: 'active'
+        }
       },
       {
         sequelize,
         modelName: 'StatusMaster',
         tableName: 'status_masters',
-        timestamps: true,
+        timestamps: true
       }
-    );
+    )
   }
 }
 
-export default StatusMaster;
+export default StatusMaster

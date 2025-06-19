@@ -1,6 +1,6 @@
-'use strict';
+'use strict'
 
-export async function up(queryInterface, Sequelize) {
+export async function up(queryInterface) {
   await queryInterface.bulkInsert('companies', [
     {
       companyName: 'TechNova Inc.',
@@ -11,7 +11,7 @@ export async function up(queryInterface, Sequelize) {
       taxNumber: 'TX12345678',
       status: 'active',
       createdAt: new Date(),
-      updatedAt: new Date(),
+      updatedAt: new Date()
     },
     {
       companyName: 'GreenField Solutions',
@@ -22,7 +22,7 @@ export async function up(queryInterface, Sequelize) {
       taxNumber: 'TX87654321',
       status: 'active',
       createdAt: new Date(),
-      updatedAt: new Date(),
+      updatedAt: new Date()
     },
     {
       companyName: 'SkyNet Global',
@@ -33,11 +33,11 @@ export async function up(queryInterface, Sequelize) {
       taxNumber: 'TX99887766',
       status: 'inactive',
       createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-  ]);
+      updatedAt: new Date()
+    }
+  ])
 }
 
-export async function down(queryInterface, Sequelize) {
-  await queryInterface.bulkDelete('companies', null, {});
+export async function down(queryInterface) {
+  await queryInterface.bulkDelete('companies', null, {})
 }

@@ -1,13 +1,13 @@
-import express from 'express';
+import express from 'express'
 import {
   createPermission,
   getAllPermissions,
   getPermissionById,
   updatePermission,
-  deletePermission,
-} from '../controllers/permissionController.js';
+  deletePermission
+} from '../controllers/permissionController.js'
 
-const router = express.Router();
+const router = express.Router()
 
 /**
  * @swagger
@@ -75,7 +75,7 @@ const router = express.Router();
  *       400:
  *         description: Bad request
  */
-router.post('/', createPermission);
+router.post('/', createPermission)
 
 /**
  * @swagger
@@ -122,7 +122,7 @@ router.post('/', createPermission);
  *                   items:
  *                     $ref: '#/components/schemas/Permission'
  */
-router.post('/getAllPermissions', getAllPermissions);
+router.post('/getAllPermissions', getAllPermissions)
 
 /**
  * @swagger
@@ -146,7 +146,7 @@ router.post('/getAllPermissions', getAllPermissions);
  *       404:
  *         description: Permission not found
  */
-router.get('/:id', getPermissionById);
+router.get('/:id', getPermissionById)
 
 /**
  * @swagger
@@ -181,7 +181,7 @@ router.get('/:id', getPermissionById);
  *       404:
  *         description: Permission not found
  */
-router.put('/:id', updatePermission);
+router.put('/:id', updatePermission)
 
 /**
  * @swagger
@@ -201,6 +201,6 @@ router.put('/:id', updatePermission);
  *       404:
  *         description: Permission not found
  */
-router.delete('/:id', deletePermission);
+router.delete('/:id', deletePermission)
 
-export default router;
+export default router

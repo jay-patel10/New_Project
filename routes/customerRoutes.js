@@ -1,13 +1,13 @@
-import express from 'express';
+import express from 'express'
 import {
   createCustomer,
   getCustomerById,
   updateCustomer,
   deleteCustomer,
-  getAllCustomers,
-} from '../controllers/customerController.js';
+  getAllCustomers
+} from '../controllers/customerController.js'
 
-const router = express.Router();
+const router = express.Router()
 
 /**
  * @swagger
@@ -95,7 +95,7 @@ const router = express.Router();
  *       500:
  *         description: Internal server error
  */
-router.post('/', createCustomer);
+router.post('/', createCustomer)
 
 /**
  * @swagger
@@ -137,7 +137,7 @@ router.post('/', createCustomer);
  *                   items:
  *                     $ref: '#/components/schemas/Customer'
  */
-router.post('/getAllCustomers', getAllCustomers);
+router.post('/getAllCustomers', getAllCustomers)
 
 /**
  * @swagger
@@ -157,7 +157,7 @@ router.post('/getAllCustomers', getAllCustomers);
  *       404:
  *         description: Customer not found
  */
-router.get('/:id', getCustomerById);
+router.get('/:id', getCustomerById)
 
 /**
  * @swagger
@@ -190,7 +190,7 @@ router.get('/:id', getCustomerById);
  *       404:
  *         description: Customer not found
  */
-router.put('/:id', updateCustomer);
+router.put('/:id', updateCustomer)
 
 /**
  * @swagger
@@ -210,6 +210,6 @@ router.put('/:id', updateCustomer);
  *       404:
  *         description: Customer not found
  */
-router.delete('/:id', deleteCustomer);
+router.delete('/:id', deleteCustomer)
 
-export default router;
+export default router

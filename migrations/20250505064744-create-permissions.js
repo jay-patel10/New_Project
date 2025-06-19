@@ -4,39 +4,39 @@ export default {
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
-        primaryKey: true,
+        primaryKey: true
       },
       name: {
         type: Sequelize.STRING(255),
         allowNull: false,
-        unique: true,
+        unique: true
       },
       status: {
         type: Sequelize.BOOLEAN,
-        defaultValue: true,
+        defaultValue: true
       },
       createdBy: {
         type: Sequelize.STRING(255),
-        allowNull: false,
+        allowNull: false
       },
       updatedBy: {
         type: Sequelize.STRING(255),
-        allowNull: false,
+        allowNull: false
       },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       updatedAt: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-      },
-    });
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+      }
+    })
   },
 
   down: async (queryInterface) => {
-    await queryInterface.dropTable('permissions');
-  },
-};
+    await queryInterface.dropTable('permissions')
+  }
+}

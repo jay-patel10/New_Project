@@ -3,11 +3,11 @@ export const up = async (queryInterface, Sequelize) => {
     id: {
       type: Sequelize.INTEGER,
       autoIncrement: true,
-      primaryKey: true,
+      primaryKey: true
     },
     customerName: {
       type: Sequelize.STRING,
-      allowNull: false,
+      allowNull: false
     },
     city: Sequelize.STRING,
     state: Sequelize.STRING,
@@ -17,26 +17,26 @@ export const up = async (queryInterface, Sequelize) => {
     contact: Sequelize.STRING,
     email: {
       type: Sequelize.STRING,
-      validate: { isEmail: true },
+      validate: { isEmail: true }
     },
     status: {
       type: Sequelize.STRING,
-      defaultValue: 'active',
+      defaultValue: 'active'
     },
     description: Sequelize.TEXT,
     organization: Sequelize.STRING,
     leadSource: Sequelize.STRING,
     createdAt: {
       type: Sequelize.DATE,
-      defaultValue: Sequelize.fn('NOW'),
+      defaultValue: Sequelize.fn('NOW')
     },
     updatedAt: {
       type: Sequelize.DATE,
-      defaultValue: Sequelize.fn('NOW'),
-    },
-  });
-};
+      defaultValue: Sequelize.fn('NOW')
+    }
+  })
+}
 
 export const down = async (queryInterface) => {
-  await queryInterface.dropTable('customers');
-};
+  await queryInterface.dropTable('customers')
+}
